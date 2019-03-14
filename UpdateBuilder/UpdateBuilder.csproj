@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8ACE6C42-A184-481C-9A7B-AF1D045F16DE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>UpdateBuilder</RootNamespace>
+    <AssemblyName>UpdateBuilder</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Controls\ToggleButonEx.cs" />
+    <Compile Include="HashCalc\CRC32.cs" />
+    <Compile Include="Models\UpdateInfoModel.cs" />
+    <Compile Include="Utils\StringHelper.cs" />
+    <Compile Include="ZIPLib\Crc32.cs" />
+    <Compile Include="ZIPLib\Deflate.cs" />
+    <Compile Include="ZIPLib\DeflateStream.cs" />
+    <Compile Include="ZIPLib\GZipStream.cs" />
+    <Compile Include="ZIPLib\Inflate.cs" />
+    <Compile Include="ZIPLib\InfTree.cs" />
+    <Compile Include="ZIPLib\Tree.cs" />
+    <Compile Include="ZIPLib\Zip\EncryptionAlgorithm.cs" />
+    <Compile Include="ZIPLib\Zip\Events.cs" />
+    <Compile Include="ZIPLib\Zip\Exceptions.cs" />
+    <Compile Include="ZIPLib\Zip\ExtractExistingFileAction.cs" />
+    <Compile Include="ZIPLib\Zip\FileSelector.cs" />
+    <Compile Include="ZIPLib\Zip\Shared.cs" />
+    <Compile Include="ZIPLib\Zip\WinZipAes.cs" />
+    <Compile Include="ZIPLib\Zip\ZipConstants.cs" />
+    <Compile Include="ZIPLib\Zip\ZipCrypto.cs" />
+    <Compile Include="ZIPLib\Zip\ZipDirEntry.cs" />
+    <Compile Include="ZIPLib\Zip\ZipEntry.cs" />
+    <Compile Include="ZIPLib\Zip\ZipEntry.Extract.cs" />
+    <Compile Include="ZIPLib\Zip\ZipEntry.Read.cs" />
+    <Compile Include="ZIPLib\Zip\ZipEntry.Write.cs" />
+    <Compile Include="ZIPLib\Zip\ZipErrorAction.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.AddUpdate.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.Check.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.Events.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.Extract.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.Read.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.Save.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.SaveSelfExtractor.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.Selector.cs" />
+    <Compile Include="ZIPLib\Zip\ZipFile.x-IEnumerable.cs" />
+    <Compile Include="ZIPLib\Zlib.cs" />
+    <Compile Include="ZIPLib\ZlibCodec.cs" />
+    <Compile Include="ZIPLib\ZlibConstants.cs" />
+    <Compile Include="ZIPLib\ZlibStream.cs" />
+    <Page Include="Controls\BusyIndicatorTemplate.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </Page>
+    <Page Include="Styles\ToggleButtonStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ScrollStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\TreeViewStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\MainStyleDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\BusyIndicator.cs" />
+    <Compile Include="Models\FileModel.cs" />
+    <Compile Include="Models\FolderModel.cs" />
+    <Compile Include="Utils\CollectionHelpers.cs" />
+    <Compile Include="Utils\PatchWorker.cs" />
+    <Compile Include="Utils\Logger.cs" />
+    <Compile Include="Utils\ScrollHelper.cs" />
+    <Compile Include="ViewModels\Items\FileItemViewModel.cs" />
+    <Compile Include="ViewModels\Items\FolderItemViewModel.cs" />
+    <Compile Include="ViewModels\Items\ItemViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\Base\RelayCommand.cs" />
+    <Compile Include="ViewModels\Base\ViewModelBase.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\logo-dark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\loading-wheel-trans.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

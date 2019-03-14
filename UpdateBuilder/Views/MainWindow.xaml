@@ -1,0 +1,105 @@
+﻿<Window x:Class="UpdateBuilder.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:UpdateBuilder.ViewModels"
+        xmlns:items="clr-namespace:UpdateBuilder.ViewModels.Items"
+        xmlns:controls="clr-namespace:UpdateBuilder.Controls"
+        xmlns:utils="clr-namespace:UpdateBuilder.Utils"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
+        Title="UpdateBuilder" Height="600" Width="700"
+        Background="#FF0A0A0B" 
+        MinHeight="600" MinWidth="600"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <HierarchicalDataTemplate DataType="{x:Type items:FolderItemViewModel}" ItemsSource="{Binding Childrens}">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding QuickUpdate}"/>
+                <TextBlock Text="{Binding Name}" Foreground="#FFCFCFCF" Margin="5,0,0,0"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <DataTemplate DataType="{x:Type items:FileItemViewModel}">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding QuickUpdate}"/>
+                <TextBlock Text="{Binding Name}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Size}" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Hash}" Margin="5,0,0,0"/>
+            </StackPanel>
+        </DataTemplate>
+
+    </Window.Resources>
+    <Grid Margin="3,10,3,3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="67"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="80"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Row="0" Grid.RowSpan="2" Command="{Binding GoToSiteCommand}"  Margin="10,3,3,3" Template="{DynamicResource UpNovaLinkStyle}"/>
+            <TextBlock Text="Files path:" Grid.Row="0" Grid.Column="1" Margin="3"/>
+            <TextBlock Text="Out path:" Grid.Row="1" Grid.Column="1" Margin="3"/>
+            <TextBox Grid.Row="0" Grid.Column="2" Margin="3" Text="{Binding PatchPath}"  Foreground="#FFCFCFCF" IsReadOnly="True"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Margin="3" Text="{Binding OutPath}" Foreground="#FFCFCFCF" IsReadOnly="True"/>
+            <Button Grid.Row="0" Grid.Column="3" Command="{Binding SetPatchPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+            <Button Grid.Row="1" Grid.Column="3" Command="{Binding SetOutPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="371*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <TextBlock Margin="5" HorizontalAlignment="Center" Text="UPDATE FILES"  FontSize="18"/>
+                <StackPanel HorizontalAlignment="Left" Margin="0,0,20,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Files count:"/>
+                        <TextBlock Text="{Binding TotalCount}" Margin="5,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Patch size:"/>
+                        <TextBlock Text="{Binding TotalSize}" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+            <Border Grid.Row="1" BorderThickness="1.3" BorderBrush="#123131">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="200*" MinHeight="200"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="100*" MinHeight="30"/>
+                    </Grid.RowDefinitions>
+                    <TreeView Grid.Row="0" Margin="5" Background="#FF040609" BorderBrush="Black" ItemsSource="{Binding MainFolder}"/>
+                    <GridSplitter Grid.Row="1" Height="6" Background="#FF212121" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#FF3E1414"/>
+                    <Grid Grid.Row="2">
+                        <ScrollViewer  utils:ScrollHelper.AutoScroll="True">
+                            <ItemsControl Margin="4" Focusable="True" Background="#FF212121" ItemsSource="{Binding Source={x:Static utils:Logger.Instance}, Path=Log}"/>
+                        </ScrollViewer>
+                        <Button Height="20" Width="20" Command="{Binding ClearLogCommand}" ToolTip="Clear Log" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5" Content="Х"/>
+                    </Grid>
+                </Grid>
+            </Border>
+            <controls:BusyIndicator Grid.Row="0" Grid.RowSpan="2" IsBusy="{Binding IsBusy}"/>
+            <Grid Grid.Row="2"  Margin="2">
+                <ProgressBar Height="15" Maximum="{Binding TotalCount}" Value="{Binding ProgressValue}" Background="#FF0B5952" BorderBrush="#FF0E645D" Foreground="#FF257A71" />
+                <TextBlock HorizontalAlignment="Center" Text="{Binding ProgressProcent}" Foreground="#FFE8CDCD"/>
+            </Grid>
+            <Button Content="Cancel" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+            <Button Content="Lets GO!" Command="{Binding BuildUpdateCommand}" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+        </Grid>
+        
+    </Grid>
+</Window>
