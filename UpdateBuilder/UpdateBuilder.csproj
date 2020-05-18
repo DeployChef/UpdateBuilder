@@ -175,6 +175,8 @@
   <ItemGroup>
     <Resource Include="Resource\loading-wheel-trans.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resource\LogoUpNova.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

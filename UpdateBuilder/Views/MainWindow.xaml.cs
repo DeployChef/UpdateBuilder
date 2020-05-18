@@ -11,5 +11,15 @@ namespace UpdateBuilder.Views
         {
             InitializeComponent();
         }
+
+        private void MinButton_Click(object sender, RoutedEventArgs e)
+        {
+            SystemCommands.MinimizeWindow(this);
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            SystemCommands.CloseWindow(this);
+        }
     }
 }

@@ -9,10 +9,10 @@
         xmlns:utils="clr-namespace:UpdateBuilder.Utils"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-        Title="UpdateBuilder" Height="600" Width="700"
-        Background="#FF0A0A0B" 
+        Title="UpdateBuilder" Height="800" Width="850"
+        Background="White" 
         MinHeight="600" MinWidth="600"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Style="{DynamicResource MainWindowStyle}">
     <Window.Resources>
         <HierarchicalDataTemplate DataType="{x:Type items:FolderItemViewModel}" ItemsSource="{Binding Childrens}">
             <StackPanel Orientation="Horizontal">
@@ -31,75 +31,161 @@
         </DataTemplate>
 
     </Window.Resources>
-    <Grid Margin="3,10,3,3">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+    <Grid>
+        <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Width="76.5" Margin="0,21,10,0">
+            <Button
+                                            x:Name="MinButton"
+                                            VerticalAlignment="Top"
+                                            Width="29.5"
+                                            Height="26"
+                                            Style="{StaticResource VS2012WindowStyleTitleBarButton}"
+                                            WindowChrome.IsHitTestVisibleInChrome="True" Cursor="Hand" Click="MinButton_Click" 
+                                            >
+                <Grid MaxHeight="14" MaxWidth="14">
+                    <Path
+                                                    Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                    StrokeThickness="1.5"
+                                                    Stretch="Fill"
+                                                    Data="M6,8 H8" Margin="0,12,0,0"
+                                                    />
+                </Grid>
+            </Button>
+
+            <Button
+                                            Grid.Column="4"
+                                            x:Name="CloseButton" 
+                                            VerticalAlignment="Top"
+                                            Width="26"
+                                            Height="26"
+                                            Style="{StaticResource VS2012WindowStyleTitleBarButton}"
+                                            WindowChrome.IsHitTestVisibleInChrome="True" Cursor="Hand" IsDefault="True" Click="CloseButton_Click"
+                                            >
+                <Grid MaxHeight="13" MaxWidth="13">
+                    <Path
+                                                    Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                    StrokeThickness="1.5"
+                                                    Stretch="UniformToFill"
+                                                    Data="M0,0 L8,8 M0,8 L8,0"
+                                                    />
+                </Grid>
+            </Button>
+        </StackPanel>
+
+
+        <Grid Margin="20,10,20,10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="25"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70"/>
-                <ColumnDefinition Width="67"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="80"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.RowSpan="2" Command="{Binding GoToSiteCommand}"  Margin="10,3,3,3" Template="{DynamicResource UpNovaLinkStyle}"/>
-            <TextBlock Text="Files path:" Grid.Row="0" Grid.Column="1" Margin="3"/>
-            <TextBlock Text="Out path:" Grid.Row="1" Grid.Column="1" Margin="3"/>
-            <TextBox Grid.Row="0" Grid.Column="2" Margin="3" Text="{Binding PatchPath}"  Foreground="#FFCFCFCF" IsReadOnly="True"/>
-            <TextBox Grid.Row="1" Grid.Column="2" Margin="3" Text="{Binding OutPath}" Foreground="#FFCFCFCF" IsReadOnly="True"/>
-            <Button Grid.Row="0" Grid.Column="3" Command="{Binding SetPatchPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
-            <Button Grid.Row="1" Grid.Column="3" Command="{Binding SetOutPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="371*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="70"/>
+
+                <RowDefinition Height="10"/>
+
+                <RowDefinition Height="50"/>
+
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
-                <TextBlock Margin="5" HorizontalAlignment="Center" Text="UPDATE FILES"  FontSize="18"/>
-                <StackPanel HorizontalAlignment="Left" Margin="0,0,20,0">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Files count:"/>
-                        <TextBlock Text="{Binding TotalCount}" Margin="5,0,0,0"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Patch size:"/>
-                        <TextBlock Text="{Binding TotalSize}" Margin="5,0,0,0"/>
-                    </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding GoToSiteCommand}" Height="70" Width="175" Template="{DynamicResource UpNovaLinkStyle}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/UpdateBuilder;component/Resource/LogoUpNova.png"/>
+                        </Button.Background>
+                    </Button>
                 </StackPanel>
             </Grid>
-            <Border Grid.Row="1" BorderThickness="1.3" BorderBrush="#123131">
-                <Grid>
+            <Separator Grid.Row="1" Height="1"></Separator>
+            <Grid Grid.Row="2" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="67"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Grid.RowSpan="2" Command="{Binding GoToSiteCommand}"  Margin="10,3,3,3" Template="{DynamicResource UpNovaLinkStyle}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/UpdateBuilder;component/Resource/logo-dark.png"/>
+                    </Button.Background>
+                </Button>
+
+                <Button Grid.Row="0" Grid.Column="3" Command="{Binding SetPatchPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+                <Button Grid.Row="1" Grid.Column="3" Command="{Binding SetOutPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+
+                <Grid Grid.ColumnSpan="4" Grid.RowSpan="2">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="200*" MinHeight="200"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="100*" MinHeight="30"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <TreeView Grid.Row="0" Margin="5" Background="#FF040609" BorderBrush="Black" ItemsSource="{Binding MainFolder}"/>
-                    <GridSplitter Grid.Row="1" Height="6" Background="#FF212121" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#FF3E1414"/>
-                    <Grid Grid.Row="2">
-                        <ScrollViewer  utils:ScrollHelper.AutoScroll="True">
-                            <ItemsControl Margin="4" Focusable="True" Background="#FF212121" ItemsSource="{Binding Source={x:Static utils:Logger.Instance}, Path=Log}"/>
-                        </ScrollViewer>
-                        <Button Height="20" Width="20" Command="{Binding ClearLogCommand}" ToolTip="Clear Log" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5" Content="Х"/>
-                    </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="67"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Files path:" Grid.Row="0" Grid.Column="1" Margin="3"/>
+                    <TextBlock Text="Files path:" Grid.Row="0" Grid.Column="1" Margin="3"/>
+                    <TextBlock Text="Out path:" Grid.Row="1" Grid.Column="1" Margin="3"/>
+                    <TextBox Grid.Row="0" Grid.Column="2" Margin="3" Text="{Binding PatchPath}"  Foreground="#FFCFCFCF" IsReadOnly="True"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" Margin="3" Text="{Binding OutPath}" Foreground="#FFCFCFCF" IsReadOnly="True"/>
                 </Grid>
-            </Border>
-            <controls:BusyIndicator Grid.Row="0" Grid.RowSpan="2" IsBusy="{Binding IsBusy}"/>
-            <Grid Grid.Row="2"  Margin="2">
-                <ProgressBar Height="15" Maximum="{Binding TotalCount}" Value="{Binding ProgressValue}" Background="#FF0B5952" BorderBrush="#FF0E645D" Foreground="#FF257A71" />
-                <TextBlock HorizontalAlignment="Center" Text="{Binding ProgressProcent}" Foreground="#FFE8CDCD"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+
+
+                </Grid>
             </Grid>
-            <Button Content="Cancel" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
-            <Button Content="Lets GO!" Command="{Binding BuildUpdateCommand}" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+            <Grid Grid.Row="1" Margin="0,446,0,0" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="371*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <TextBlock Margin="5" HorizontalAlignment="Center" Text="UPDATE FILES"  FontSize="18"/>
+                    <StackPanel HorizontalAlignment="Left" Margin="0,0,20,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Files count:"/>
+                            <TextBlock Text="{Binding TotalCount}" Margin="5,0,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Patch size:"/>
+                            <TextBlock Text="{Binding TotalSize}" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <Border Grid.Row="1" BorderThickness="1.3" BorderBrush="#123131">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="200*" MinHeight="200"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="100*" MinHeight="30"/>
+                        </Grid.RowDefinitions>
+                        <TreeView Grid.Row="0" Margin="5" Background="#FF040609" BorderBrush="Black" ItemsSource="{Binding MainFolder}"/>
+                        <GridSplitter Grid.Row="1" Height="6" Background="#FF212121" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#FF3E1414"/>
+                        <Grid Grid.Row="2">
+                            <ScrollViewer  utils:ScrollHelper.AutoScroll="True">
+                                <ItemsControl Margin="4" Focusable="True" Background="#FF212121" ItemsSource="{Binding Source={x:Static utils:Logger.Instance}, Path=Log}"/>
+                            </ScrollViewer>
+                            <Button Height="20" Width="20" Command="{Binding ClearLogCommand}" ToolTip="Clear Log" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5" Content="Х"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <controls:BusyIndicator Grid.Row="0" Grid.RowSpan="2" IsBusy="{Binding IsBusy}"/>
+                <Grid Grid.Row="2"  Margin="2">
+                    <ProgressBar Height="15" Maximum="{Binding TotalCount}" Value="{Binding ProgressValue}" Background="#FF0B5952" BorderBrush="#FF0E645D" Foreground="#FF257A71" />
+                    <TextBlock HorizontalAlignment="Center" Text="{Binding ProgressProcent}" Foreground="#FFE8CDCD"/>
+                </Grid>
+                <Button Content="Cancel" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+                <Button Content="Lets GO!" Command="{Binding BuildUpdateCommand}" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+            </Grid>
+
         </Grid>
-        
     </Grid>
 </Window>

@@ -54,11 +54,7 @@
     </Style>
 
     <ControlTemplate x:Key="UpNovaLinkStyle" TargetType="{x:Type Button}">
-        <Grid>
-            <Grid.Background>
-                <ImageBrush ImageSource="/UpdateBuilder;component/Resource/logo-dark.png"/>
-            </Grid.Background>
-        </Grid>
+        <Grid Background="{TemplateBinding Background}"/>
     </ControlTemplate>
     <Style x:Key="FocusVisual">
         <Setter Property="Control.Template">
@@ -155,6 +151,104 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+
+
+    <Style x:Key="VS2012WindowStyleTitleBarButton" TargetType="{x:Type Button}">
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Border
+                            x:Name="PART_border"
+                            Background="Transparent"
+                            />
+                        <ContentPresenter />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="PART_border" Property="Background" Value="#FFF" />
+                            <Setter TargetName="PART_border" Property="Opacity" Value="0.7" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="AllowsTransparency" Value="true" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome
+                    NonClientFrameEdges="None"
+                    GlassFrameThickness="0"
+                    ResizeBorderThickness="7"
+                    CaptionHeight="32"
+                />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type Window}">
+
+                    <Border x:Name="PART_Container" Padding="7 7 7 5" >
+
+                        <Grid>
+
+                            <Border
+                            x:Name="PART_Border"
+                            Width="Auto"
+                            Height="Auto"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                           CornerRadius="10">
+
+                                <DockPanel
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent"
+                                VerticalAlignment="Stretch">
+
+                                    <ContentPresenter/>
+                                </DockPanel>
+
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="WindowState" Value="Normal">
+                            <Setter TargetName="PART_Border" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                        Color="black"
+                                        Opacity="0.5"
+                                        BlurRadius="7"
+                                        ShadowDepth="2"
+                                        Direction="315"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Resources>
+            <Style TargetType="{x:Type ResizeGrip}">
+                <Setter Property="WindowChrome.ResizeGripDirection" Value="BottomRight" />
+            </Style>
+        </Style.Resources>
+
     </Style>
 
 </ResourceDictionary>
