@@ -9,7 +9,7 @@
         xmlns:utils="clr-namespace:UpdateBuilder.Utils"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-        Title="UpdateBuilder" Height="800" Width="850"
+        Title="UpdateBuilder" Height="852" Width="834"
         Background="White" 
         MinHeight="600" MinWidth="600"
         WindowStartupLocation="CenterScreen" Style="{DynamicResource MainWindowStyle}">
@@ -32,16 +32,16 @@
 
     </Window.Resources>
     <Grid>
-        <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Width="76.5" Margin="0,21,10,0">
+        <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Width="62.416" Margin="0,17.25,10,0">
             <Button
                                             x:Name="MinButton"
                                             VerticalAlignment="Top"
-                                            Width="29.5"
+                                            Width="27.583"
                                             Height="26"
                                             Style="{StaticResource VS2012WindowStyleTitleBarButton}"
                                             WindowChrome.IsHitTestVisibleInChrome="True" Cursor="Hand" Click="MinButton_Click" 
                                             >
-                <Grid MaxHeight="14" MaxWidth="14">
+                <Grid MaxHeight="14" MaxWidth="13">
                     <Path
                                                     Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                                     StrokeThickness="1.5"
@@ -55,7 +55,7 @@
                                             Grid.Column="4"
                                             x:Name="CloseButton" 
                                             VerticalAlignment="Top"
-                                            Width="26"
+                                            Width="24.5"
                                             Height="26"
                                             Style="{StaticResource VS2012WindowStyleTitleBarButton}"
                                             WindowChrome.IsHitTestVisibleInChrome="True" Cursor="Hand" IsDefault="True" Click="CloseButton_Click"
@@ -72,26 +72,39 @@
         </StackPanel>
 
 
-        <Grid Margin="20,10,20,10">
+        <Grid Margin="20,10,30,10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="70"/>
+                <RowDefinition Height="80"/>
 
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="20"/>
 
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="40"/>
 
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            
             <Grid Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
-                    <Button Command="{Binding GoToSiteCommand}" Height="70" Width="175" Template="{DynamicResource UpNovaLinkStyle}">
+                    <Button Command="{Binding GoToSiteCommand}" Width="170.75" Template="{DynamicResource UpNovaLinkStyle}" Margin="0,3.333,0,6.75">
                         <Button.Background>
                             <ImageBrush ImageSource="/UpdateBuilder;component/Resource/LogoUpNova.png"/>
                         </Button.Background>
                     </Button>
+                    <StackPanel Margin="0,20,0,0">
+                        <RadioButton Content="Ru"/>
+                        <RadioButton Content="Eng"/>
+                    </StackPanel>
+                    <StackPanel Margin="30,22,0,0">
+                        <CheckBox Content="Показывать размер файлов"  FontSize="15" Style="{DynamicResource CheckBoxStyle}" FontFamily="Arial"/>
+                        <CheckBox Content="Показывать Хеш-суммы файлов"  FontSize="15" Margin="0,5" Height="26" Style="{DynamicResource CheckBoxStyle}"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
-            <Separator Grid.Row="1" Height="1"></Separator>
+
+            <Separator Grid.Row="1" Margin="10,0,0,0" Background="#6DA0A0A0">
+
+            </Separator>
+
             <Grid Grid.Row="2" Visibility="Hidden">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>

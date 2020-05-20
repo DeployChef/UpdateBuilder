@@ -178,5 +178,11 @@
   <ItemGroup>
     <Resource Include="Resource\LogoUpNova.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Frame 1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Frame.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
