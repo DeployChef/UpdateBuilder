@@ -70,7 +70,7 @@
     <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
     <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
 
-    <Style TargetType="{x:Type Button}">
+    <Style x:Key="RegularButton" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
         <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
         <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
@@ -83,38 +83,32 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true" CornerRadius="3" Background="#FF009688" BorderBrush="#FF1EB8A9">
+                    <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true" CornerRadius="10" Background="#FF4684EB" BorderBrush="{x:Null}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualStateGroup.Transitions>
                                     <VisualTransition GeneratedDuration="0:0:0.2"/>
                                 </VisualStateGroup.Transitions>
                                 <VisualState x:Name="Normal"/>
-                                <VisualState x:Name="MouseOver"/>
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="border">
+                                            <EasingColorKeyFrame KeyTime="0" Value="#FF1261E4"/>
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
                                 <VisualState x:Name="Pressed"/>
-                                <VisualState x:Name="Disabled"/>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.625"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsDefaulted" Value="true">
-                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="border" Value="#FF0B5952"/>
-                            <Setter Property="BorderBrush" TargetName="border" Value="#FF257A71"/>
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="true">
-                            <Setter Property="BorderBrush" TargetName="border" Value="#FF042B27"/>
-                            <Setter Property="Background" TargetName="border" Value="#FF257A71"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" TargetName="border" Value="#7F009688"/>
-                            <Setter Property="BorderBrush" TargetName="border" Value="#7F1EB8A9"/>
-
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -366,6 +360,54 @@
                 <Rectangle x:Name="rectangle" Fill="{TemplateBinding Background}"/>
             </Border>
         </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="DropSelectFolderButton" TargetType="{x:Type Button}">
+        <ControlTemplate.Resources>
+            <Storyboard x:Key="OnDragOver1">
+                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle">
+                    <EasingColorKeyFrame KeyTime="0" Value="#FF4F8CF3"/>
+                </ColorAnimationUsingKeyFrames>
+                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle1">
+                    <EasingColorKeyFrame KeyTime="0" Value="#FF4F8CF3"/>
+                </ColorAnimationUsingKeyFrames>
+            </Storyboard>
+        </ControlTemplate.Resources>
+        <Grid Background="Transparent">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualStateGroup.Transitions>
+                        <VisualTransition GeneratedDuration="0:0:0.2"/>
+                    </VisualStateGroup.Transitions>
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="MouseOver">
+                        <Storyboard>
+                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle">
+                                <EasingColorKeyFrame KeyTime="0" Value="#FF4F8CF3"/>
+                            </ColorAnimationUsingKeyFrames>
+                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle1">
+                                <EasingColorKeyFrame KeyTime="0" Value="#FF4F8CF3"/>
+                            </ColorAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Pressed"/>
+                    <VisualState x:Name="Disabled"/>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Rectangle x:Name="rectangle" Stroke="#FF94BCFF" StrokeThickness="1" StrokeDashArray="4 3"
+                                                       SnapsToDevicePixels="True" RadiusX="7" RadiusY="7"/>
+            <Rectangle x:Name="rectangle1" Fill="#FF94BCFF" VerticalAlignment="Center" Margin="15,0,0,0" Width="20" Height="20" HorizontalAlignment="Left">
+                <Rectangle.OpacityMask>
+                    <ImageBrush ImageSource="/UpdateBuilder;component/Resource/bigFolder.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+        </Grid>
+        <ControlTemplate.Triggers>
+            <EventTrigger RoutedEvent="UIElement.DragOver">
+                <BeginStoryboard Storyboard="{StaticResource OnDragOver1}"/>
+            </EventTrigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
 </ResourceDictionary>

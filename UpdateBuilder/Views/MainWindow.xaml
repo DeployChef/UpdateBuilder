@@ -11,7 +11,7 @@
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Title="UpdateBuilder" Height="852" Width="834"
         Background="White" 
-        MinHeight="600" MinWidth="600"
+        MinHeight="800" MinWidth="820"
         WindowStartupLocation="CenterScreen" Style="{DynamicResource MainWindowStyle}">
     <Window.Resources>
         <HierarchicalDataTemplate DataType="{x:Type items:FolderItemViewModel}" ItemsSource="{Binding Childrens}">
@@ -78,9 +78,9 @@
 
                 <RowDefinition Height="20"/>
 
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="100"/>
 
-                <RowDefinition Height="*"/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -90,13 +90,13 @@
                             <ImageBrush ImageSource="/UpdateBuilder;component/Resource/LogoUpNova.png"/>
                         </Button.Background>
                     </Button>
-                    <StackPanel Margin="16,20,0,0">
+                    <StackPanel Margin="16,22,0,0">
                         <RadioButton Content="Ru" Template="{DynamicResource LangRadio}" Width="27" Height="21" Cursor="Hand" IsChecked="True">
                             <RadioButton.Background>
                                 <ImageBrush ImageSource="/UpdateBuilder;component/Resource/Ru.png"/>
                             </RadioButton.Background>
                         </RadioButton>
-                        <RadioButton Content="Eng" Width="27" Height="21" Margin="0,9" Template="{DynamicResource LangRadio}" Cursor="Hand">
+                        <RadioButton Content="Eng" Width="27" Height="21" Margin="0,7" Template="{DynamicResource LangRadio}" Cursor="Hand">
                             <RadioButton.Background>
                                 <ImageBrush ImageSource="/UpdateBuilder;component/Resource/En.png"/>
                             </RadioButton.Background>
@@ -112,6 +112,49 @@
             <Separator Grid.Row="1" Margin="10,0,0,0" Background="#6DA0A0A0">
 
             </Separator>
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="59*"/>
+                    <ColumnDefinition Width="69*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="01. Загрузите файлы патча" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
+                <TextBlock Grid.Column="1" Text="02. Куда будем сохранять патч для апдейтера ?" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
+
+                <Grid Grid.Row="1" Grid.Column="0">
+
+                    <Grid  Margin="62.417,21,38.583,18.667" Visibility="Hidden">
+                        <TextBlock x:Name="PatchPath" Text="{Binding PatchPath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="#FF94BCFF" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                        <Rectangle  Fill="#FF94BCFF" Margin="0,16,0,3"/>
+                    </Grid>
+                    <TextBlock Margin="62.417,13.666,29.5,13"  FontSize="14" TextWrapping="Wrap">
+                        <Run Text="Переместите сюда папку с патчем или" Foreground="#FF80A9F0"/>
+                        <Run Text="нажмите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>      
+                        <Run Text="чтобы выбрать вручную" Foreground="#FF80A9F0"/>
+                    </TextBlock>
+
+                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetPatchPathCommand}" Margin="10,5,18.5,5" AllowDrop="True" Drop="Button_Drop" Cursor="Hand"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Rectangle Fill="#FF94BCFF" Width="24" Height="24" Margin="15.146,12.271,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Rectangle.OpacityMask>
+                            <ImageBrush ImageSource="/UpdateBuilder;component/Resource/minFolder.png"/>
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+
+                    <TextBlock Text="Выберите папку" Margin="57.5,19,130.667,74.667" Foreground="#FF94BCFF" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding OutPath, UpdateSourceTrigger=PropertyChanged}" Margin="57.5,19,130.667,0" Foreground="#FF94BCFF" FontSize="14" TextTrimming="CharacterEllipsis" Height="22.333" VerticalAlignment="Top"/>
+
+                    <Rectangle Margin="57.984,41.333,131.73,0" Fill="#FF94BCFF" Height="1" VerticalAlignment="Top"/>
+                    <Button Content="Выбрать" Command="{Binding SetOutPathCommand}" Height="36.312" Margin="0,7.146,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="117" FontSize="14" Style="{DynamicResource RegularButton}" Foreground="White"/>
+                </Grid>
+
+            </Grid>
 
             <Grid Grid.Row="2" Visibility="Hidden">
                 <Grid.RowDefinitions>
@@ -124,11 +167,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="80"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Row="0" Grid.RowSpan="2" Command="{Binding GoToSiteCommand}"  Margin="10,3,3,3" Template="{DynamicResource UpNovaLinkStyle}">
-                    <Button.Background>
-                        <ImageBrush ImageSource="/UpdateBuilder;component/Resource/logo-dark.png"/>
-                    </Button.Background>
-                </Button>
+
 
                 <Button Grid.Row="0" Grid.Column="3" Command="{Binding SetPatchPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
                 <Button Grid.Row="1" Grid.Column="3" Command="{Binding SetOutPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
@@ -161,7 +200,7 @@
 
                 </Grid>
             </Grid>
-            <Grid Grid.Row="1" Margin="0,446,0,0" Visibility="Hidden">
+            <Grid Grid.Row="3" Margin="0,385,0,167">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="371*"/>
