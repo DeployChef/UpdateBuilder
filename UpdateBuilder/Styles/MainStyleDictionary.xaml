@@ -45,7 +45,7 @@
     </Style>-->
 
     <Style TargetType="{x:Type TextBlock}">
-        <Setter Property="FontFamily" Value="Montserrat"/>
+        <Setter Property="FontFamily" Value="./#Montserrat"/>
     </Style>
 
     <ControlTemplate x:Key="UpNovaLinkStyle" TargetType="{x:Type Button}">
@@ -329,5 +329,43 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <ControlTemplate x:Key="LangRadio" TargetType="{x:Type RadioButton}">
+        <Grid>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualStateGroup.Transitions>
+                        <VisualTransition GeneratedDuration="0:0:0.2"/>
+                    </VisualStateGroup.Transitions>
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="MouseOver">
+                        <Storyboard>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="rectangle">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0.9"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Pressed"/>
+                    <VisualState x:Name="Disabled"/>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="CheckStates">
+                    <VisualStateGroup.Transitions>
+                        <VisualTransition GeneratedDuration="0:0:0.2"/>
+                    </VisualStateGroup.Transitions>
+                    <VisualState x:Name="Checked"/>
+                    <VisualState x:Name="Unchecked">
+                        <Storyboard>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="rectangle">
+                                <EasingDoubleKeyFrame KeyTime="0" Value="0.435"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Indeterminate"/>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Border>
+                <Rectangle x:Name="rectangle" Fill="{TemplateBinding Background}"/>
+            </Border>
+        </Grid>
+    </ControlTemplate>
 
 </ResourceDictionary>

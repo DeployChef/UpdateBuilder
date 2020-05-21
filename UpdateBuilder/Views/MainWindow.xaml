@@ -82,7 +82,7 @@
 
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+
             <Grid Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding GoToSiteCommand}" Width="170.75" Template="{DynamicResource UpNovaLinkStyle}" Margin="0,3.333,0,6.75">
@@ -90,13 +90,21 @@
                             <ImageBrush ImageSource="/UpdateBuilder;component/Resource/LogoUpNova.png"/>
                         </Button.Background>
                     </Button>
-                    <StackPanel Margin="0,20,0,0">
-                        <RadioButton Content="Ru"/>
-                        <RadioButton Content="Eng"/>
+                    <StackPanel Margin="16,20,0,0">
+                        <RadioButton Content="Ru" Template="{DynamicResource LangRadio}" Width="27" Height="21" Cursor="Hand" IsChecked="True">
+                            <RadioButton.Background>
+                                <ImageBrush ImageSource="/UpdateBuilder;component/Resource/Ru.png"/>
+                            </RadioButton.Background>
+                        </RadioButton>
+                        <RadioButton Content="Eng" Width="27" Height="21" Margin="0,9" Template="{DynamicResource LangRadio}" Cursor="Hand">
+                            <RadioButton.Background>
+                                <ImageBrush ImageSource="/UpdateBuilder;component/Resource/En.png"/>
+                            </RadioButton.Background>
+                        </RadioButton>
                     </StackPanel>
-                    <StackPanel Margin="30,22,0,0">
+                    <StackPanel Margin="25,20,0,0">
                         <CheckBox Content="Показывать размер файлов"  FontSize="15" Style="{DynamicResource CheckBoxStyle}" FontFamily="Arial"/>
-                        <CheckBox Content="Показывать Хеш-суммы файлов"  FontSize="15" Margin="0,5" Height="26" Style="{DynamicResource CheckBoxStyle}"/>
+                        <CheckBox Content="Показывать Хеш-суммы файлов"  FontSize="15" Margin="0,3" Style="{DynamicResource CheckBoxStyle}"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>

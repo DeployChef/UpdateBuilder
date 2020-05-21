@@ -165,6 +165,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Styles\Montserrat.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -183,6 +184,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resource\Frame.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Ru.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\En.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
