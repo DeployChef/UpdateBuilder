@@ -197,5 +197,9 @@
   <ItemGroup>
     <Resource Include="Resource\minFolder.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Figura.png" />
+    <Resource Include="Resource\Tsentr.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

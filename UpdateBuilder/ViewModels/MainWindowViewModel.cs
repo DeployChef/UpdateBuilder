@@ -17,7 +17,7 @@ namespace UpdateBuilder.ViewModels
         private bool _inBuilding;
         private string _pathPath;
         private string _outPath;
-        private string _totalSize;
+        private string _totalSize = ((long)0).BytesToString();
         private int _totalCount;
         private int _progressValue;
         private ObservableCollection<FolderItemViewModel> _mainFolder = new ObservableCollection<FolderItemViewModel>();

@@ -72,7 +72,7 @@
         </StackPanel>
 
 
-        <Grid Margin="20,10,30,10">
+        <Grid Margin="20,12,30,40">
             <Grid.RowDefinitions>
                 <RowDefinition Height="80"/>
 
@@ -81,9 +81,11 @@
                 <RowDefinition Height="100"/>
 
                 <RowDefinition/>
+
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
+            <Grid x:Name="HeaderPanel" Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding GoToSiteCommand}" Width="170.75" Template="{DynamicResource UpNovaLinkStyle}" Margin="0,3.333,0,6.75">
                         <Button.Background>
@@ -109,10 +111,9 @@
                 </StackPanel>
             </Grid>
 
-            <Separator Grid.Row="1" Margin="10,0,0,0" Background="#6DA0A0A0">
+            <Separator Grid.Row="1" Margin="10,0,0,0" Background="#6DA0A0A0"/>
 
-            </Separator>
-            <Grid Grid.Row="2">
+            <Grid x:Name="FilesPanel" Grid.Row="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition/>
@@ -137,7 +138,7 @@
                         <Run Text="чтобы выбрать вручную" Foreground="#FF80A9F0"/>
                     </TextBlock>
 
-                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetPatchPathCommand}" Margin="10,5,18.5,5" AllowDrop="True" Drop="Button_Drop" Cursor="Hand"/>
+                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetPatchPathCommand}" Margin="10,5,30,5" AllowDrop="True" Drop="Button_Drop" Cursor="Hand"/>
                 </Grid>
 
                 <Grid Grid.Row="1" Grid.Column="1">
@@ -156,68 +157,29 @@
 
             </Grid>
 
-            <Grid Grid.Row="2" Visibility="Hidden">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="70"/>
-                    <ColumnDefinition Width="67"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="80"/>
-                </Grid.ColumnDefinitions>
-
-
-                <Button Grid.Row="0" Grid.Column="3" Command="{Binding SetPatchPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
-                <Button Grid.Row="1" Grid.Column="3" Command="{Binding SetOutPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
-
-                <Grid Grid.ColumnSpan="4" Grid.RowSpan="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="67"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="80"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Files path:" Grid.Row="0" Grid.Column="1" Margin="3"/>
-                    <TextBlock Text="Files path:" Grid.Row="0" Grid.Column="1" Margin="3"/>
-                    <TextBlock Text="Out path:" Grid.Row="1" Grid.Column="1" Margin="3"/>
-                    <TextBox Grid.Row="0" Grid.Column="2" Margin="3" Text="{Binding PatchPath}"  Foreground="#FFCFCFCF" IsReadOnly="True"/>
-                    <TextBox Grid.Row="1" Grid.Column="2" Margin="3" Text="{Binding OutPath}" Foreground="#FFCFCFCF" IsReadOnly="True"/>
-                </Grid>
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-
-
-                </Grid>
-            </Grid>
-            <Grid Grid.Row="3" Margin="0,385,0,167">
+            <Grid x:Name="MainPanel" Grid.Row="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="371*"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <TextBlock Margin="5" HorizontalAlignment="Center" Text="UPDATE FILES"  FontSize="18"/>
-                    <StackPanel HorizontalAlignment="Left" Margin="0,0,20,0">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Files count:"/>
-                            <TextBlock Text="{Binding TotalCount}" Margin="5,0,0,0"/>
+
+                <Grid Grid.Row="0" Margin="20,15,20,10" Height="60">
+                    <Grid  Margin="20,0,0,0"  HorizontalAlignment="Center">
+                        <StackPanel  Orientation="Horizontal">
+                            <TextBlock  Text="Файлы обновления" TextAlignment="Center" VerticalAlignment="Center"  FontSize="18" Margin="0,28.4,0,10"/>
+                            <Rectangle Fill="#FF4684EB" RadiusX="90" RadiusY="90" Width="22" Height="22" Margin="0,12,0,19"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Patch size:"/>
-                            <TextBlock Text="{Binding TotalSize}" Margin="5,0,0,0"/>
-                        </StackPanel>
+                    </Grid>
+                  
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                        <TextBlock Text="Количество файлов:" Foreground="#FF94BCFF" FontSize="14"/>
+                        <TextBlock Text="{Binding TotalCount}" Margin="5,0,0,0" Foreground="#FF4684EB" FontSize="14"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal"  VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                        <TextBlock Text="Размер патча:" Foreground="#FF94BCFF" FontSize="14"/>
+                        <TextBlock Text="{Binding TotalSize}" Margin="5,0,0,0" Foreground="#FF4684EB" FontSize="14"/>
                     </StackPanel>
                 </Grid>
                 <Border Grid.Row="1" BorderThickness="1.3" BorderBrush="#123131">
@@ -227,23 +189,35 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="100*" MinHeight="30"/>
                         </Grid.RowDefinitions>
-                        <TreeView Grid.Row="0" Margin="5" Background="#FF040609" BorderBrush="Black" ItemsSource="{Binding MainFolder}"/>
-                        <GridSplitter Grid.Row="1" Height="6" Background="#FF212121" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#FF3E1414"/>
+
+                        <TreeView Grid.Row="0" Margin="5" Background="#FF040609" BorderBrush="Black" ItemsSource="{Binding MainFolder}" Grid.ColumnSpan="2"/>
+                        <controls:BusyIndicator Grid.Row="0" IsBusy="True" Style="{DynamicResource NewBusy}" Grid.ColumnSpan="2"/>
+
+                        <GridSplitter Style="{DynamicResource NewSplitter}"  Grid.Row="1" Height="5" Width="80" Background="#94BCFF" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#94BCFF"/>
+
                         <Grid Grid.Row="2">
                             <ScrollViewer  utils:ScrollHelper.AutoScroll="True">
-                                <ItemsControl Margin="4" Focusable="True" Background="#FF212121" ItemsSource="{Binding Source={x:Static utils:Logger.Instance}, Path=Log}"/>
+                                <ItemsControl Margin="4" Focusable="True" Background="#FF212121" ItemsSource="{Binding Log, Source={x:Static utils:Logger.Instance}}"/>
                             </ScrollViewer>
                             <Button Height="20" Width="20" Command="{Binding ClearLogCommand}" ToolTip="Clear Log" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5" Content="Х"/>
                         </Grid>
                     </Grid>
                 </Border>
-                <controls:BusyIndicator Grid.Row="0" Grid.RowSpan="2" IsBusy="{Binding IsBusy}"/>
-                <Grid Grid.Row="2"  Margin="2">
-                    <ProgressBar Height="15" Maximum="{Binding TotalCount}" Value="{Binding ProgressValue}" Background="#FF0B5952" BorderBrush="#FF0E645D" Foreground="#FF257A71" />
-                    <TextBlock HorizontalAlignment="Center" Text="{Binding ProgressProcent}" Foreground="#FFE8CDCD"/>
+            </Grid>
+
+            <Grid x:Name="ProgressPanel" Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Margin="5,0">
+                    <ProgressBar Maximum="{Binding TotalCount}" Value="{Binding ProgressValue}" Background="#ECE9F1" Foreground="#4684EB" Style="{DynamicResource CornerProgressBarStyle}" BorderBrush="{x:Null}" />
+                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding ProgressProcent}" Foreground="White"/>
                 </Grid>
-                <Button Content="Cancel" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
-                <Button Content="Lets GO!" Command="{Binding BuildUpdateCommand}" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+                <Grid Grid.Column="1"  Margin="8,0" >
+                    <Button Content="Отмена" Width="179" Style="{DynamicResource RegularButton}" Visibility="Hidden"/>
+                    <Button Content="Начать упаковку" Command="{Binding BuildUpdateCommand}" Width="179" Style="{DynamicResource RegularButton}"/>
+                </Grid>
             </Grid>
 
         </Grid>
