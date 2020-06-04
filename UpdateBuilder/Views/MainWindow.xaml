@@ -157,7 +157,7 @@
 
             </Grid>
 
-            <Grid x:Name="MainPanel" Grid.Row="3">
+            <Grid x:Name="MainPanel" Grid.Row="3"  Margin="8,0,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="371*"/>
@@ -167,7 +167,7 @@
                     <Grid  Margin="20,0,0,0"  HorizontalAlignment="Center">
                         <StackPanel  Orientation="Horizontal">
                             <TextBlock  Text="Файлы обновления" TextAlignment="Center" VerticalAlignment="Center"  FontSize="18" Margin="0,28.4,0,10"/>
-                            <Rectangle Fill="#FF4684EB" RadiusX="90" RadiusY="90" Width="22" Height="22" Margin="0,12,0,19"/>
+                            <Rectangle Fill="#FF4684EB" RadiusX="90" RadiusY="90" Width="22" Height="22" Margin="0,12,0,19" Visibility="Hidden"/>
                         </StackPanel>
                     </Grid>
                   
@@ -189,10 +189,12 @@
                             <RowDefinition Height="100*" MinHeight="43"/>
                         </Grid.RowDefinitions>
 
+                    <Border BorderBrush="#FFECE9F1" BorderThickness="1" CornerRadius="10">
                         <TreeView Style="{DynamicResource TreeViewStyle}" Grid.Row="0" Margin="5" ItemsSource="{Binding MainFolder}" Grid.ColumnSpan="2"/>
-                        <controls:BusyIndicator Grid.Row="0" IsBusy="False" Style="{DynamicResource NewBusy}" Grid.ColumnSpan="2"/>
+                    </Border>
+                    <controls:BusyIndicator Grid.Row="0" IsBusy="{Binding IsBusy}" Style="{DynamicResource NewBusy}" Grid.ColumnSpan="2"/>
 
-                        <GridSplitter Style="{DynamicResource NewSplitter}"  Grid.Row="1" Height="5" Margin="0,5" Width="80" Background="#94BCFF" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#94BCFF"/>
+                    <GridSplitter Style="{DynamicResource NewSplitter}"  Grid.Row="1" Height="5" Margin="0,5" Width="80" Background="#94BCFF" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#94BCFF"/>
 
                     <Grid Grid.Row="2" Margin="0,0,0,16">
                         <Border BorderBrush="#FFECE9F1" BorderThickness="1" CornerRadius="10">
@@ -211,7 +213,7 @@
                             WindowChrome.IsHitTestVisibleInChrome="True" Cursor="Hand" IsDefault="True" Command="{Binding ClearLogCommand}">
                             <Grid MaxHeight="13" MaxWidth="13">
                                 <Path
-                                    Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                    Stroke="#FF848287"
                                     StrokeThickness="1.5"
                                     Stretch="UniformToFill"
                                     Data="M0,0 L8,8 M0,8 L8,0"
@@ -222,16 +224,16 @@
                 </Grid>
             </Grid>
 
-            <Grid x:Name="ProgressPanel" Grid.Row="4">
+            <Grid x:Name="ProgressPanel" Grid.Row="4" Margin="8,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" Margin="5,0">
+                <Grid Grid.Column="0" Margin="0,0,5,0">
                     <ProgressBar Maximum="{Binding TotalCount}" Value="{Binding ProgressValue}" Background="#ECE9F1" Foreground="#4684EB" Style="{DynamicResource CornerProgressBarStyle}" BorderBrush="{x:Null}" />
                     <TextBlock HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding ProgressProcent}" Foreground="White"/>
                 </Grid>
-                <Grid Grid.Column="1"  Margin="8,0" >
+                <Grid Grid.Column="1"  Margin="8,0,0,0" >
                     <Button Content="Отмена" Width="179" Style="{DynamicResource RegularButton}" Visibility="Hidden"/>
                     <Button Content="Начать упаковку" Command="{Binding BuildUpdateCommand}" Width="179" Style="{DynamicResource RegularButton}"/>
                 </Grid>

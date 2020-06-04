@@ -21,7 +21,7 @@
     <Color x:Key="ControlPressedColor">#FF211AA9</Color>
 
 
-    <Color x:Key="GlyphColor">#1ABC9C</Color>
+    <Color x:Key="GlyphColor">#4684EB</Color>
     <Color x:Key="GlyphMouseOver">sc#1, 0.004391443, 0.002428215, 0.242281124</Color>
 
     <!--Border colors-->
@@ -86,10 +86,7 @@
                 <ControlTemplate TargetType="TreeView">
                     <Border Name="Border"
                             CornerRadius="1"
-                            BorderThickness="1">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource BorderMediumColor}" />
-                        </Border.BorderBrush>
+                            BorderThickness="1" BorderBrush="{x:Null}">
                         <ScrollViewer Focusable="False"
                         CanContentScroll="False"
                         Padding="4" Foreground="{x:Null}">
@@ -133,22 +130,22 @@
                         </VisualStateManager.VisualStateGroups>
                         <Path x:Name="Collapsed"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Margin="1,1,1,1"
-                Data="M 4 0 L 8 4 L 4 8 Z">
-                            <Path.Fill>
+                VerticalAlignment="Center"          
+                Margin="1"
+                Data="M1 1L7 6L1 11">
+                            <Path.Stroke>
                                 <SolidColorBrush Color="{DynamicResource GlyphColor}" />
-                            </Path.Fill>
+                            </Path.Stroke>
                         </Path>
                         <Path x:Name="Expanded"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Margin="1,1,1,1"
-                Data="M 0 4 L 8 4 L 4 8 Z"
+                Margin="1"
+                Data="M11 1L6 7L1 1"
                 Visibility="Hidden">
-                            <Path.Fill>
+                            <Path.Stroke>
                                 <SolidColorBrush Color="{DynamicResource GlyphColor}" />
-                            </Path.Fill>
+                            </Path.Stroke>
                         </Path>
                     </Grid>
                 </ControlTemplate>
