@@ -72,7 +72,7 @@
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
 
-    <Style TargetType="TreeView">
+    <Style x:Key="TreeViewStyle" TargetType="TreeView">
         <Setter Property="OverridesDefaultStyle"
           Value="True" />
         <Setter Property="SnapsToDevicePixels"

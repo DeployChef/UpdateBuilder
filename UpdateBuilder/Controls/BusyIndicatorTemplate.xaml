@@ -24,7 +24,7 @@
                     </ControlTemplate.Resources>
                     <Border x:Name="ContentBorder" 
                             SnapsToDevicePixels="True"
-                            Visibility="Visible"
+                            Visibility="Hidden"
                             IsHitTestVisible="{TemplateBinding IsBusy}" 
                             Background="Transparent"
                             HorizontalAlignment="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HorizontalAlignment}"

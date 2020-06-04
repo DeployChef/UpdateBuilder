@@ -182,27 +182,44 @@
                         <TextBlock Text="{Binding TotalSize}" Margin="5,0,0,0" Foreground="#FF4684EB" FontSize="14"/>
                     </StackPanel>
                 </Grid>
-                <Border Grid.Row="1" BorderThickness="1.3" BorderBrush="#123131">
-                    <Grid>
+                <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="200*" MinHeight="200"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="100*" MinHeight="30"/>
+                            <RowDefinition Height="100*" MinHeight="43"/>
                         </Grid.RowDefinitions>
 
-                        <TreeView Grid.Row="0" Margin="5" Background="#FF040609" BorderBrush="Black" ItemsSource="{Binding MainFolder}" Grid.ColumnSpan="2"/>
-                        <controls:BusyIndicator Grid.Row="0" IsBusy="True" Style="{DynamicResource NewBusy}" Grid.ColumnSpan="2"/>
+                        <TreeView Style="{DynamicResource TreeViewStyle}" Grid.Row="0" Margin="5" ItemsSource="{Binding MainFolder}" Grid.ColumnSpan="2"/>
+                        <controls:BusyIndicator Grid.Row="0" IsBusy="False" Style="{DynamicResource NewBusy}" Grid.ColumnSpan="2"/>
 
-                        <GridSplitter Style="{DynamicResource NewSplitter}"  Grid.Row="1" Height="5" Width="80" Background="#94BCFF" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#94BCFF"/>
+                        <GridSplitter Style="{DynamicResource NewSplitter}"  Grid.Row="1" Height="5" Margin="0,5" Width="80" Background="#94BCFF" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#94BCFF"/>
 
-                        <Grid Grid.Row="2">
-                            <ScrollViewer  utils:ScrollHelper.AutoScroll="True">
-                                <ItemsControl Margin="4" Focusable="True" Background="#FF212121" ItemsSource="{Binding Log, Source={x:Static utils:Logger.Instance}}"/>
+                    <Grid Grid.Row="2" Margin="0,0,0,16">
+                        <Border BorderBrush="#FFECE9F1" BorderThickness="1" CornerRadius="10">
+                            <ScrollViewer  utils:ScrollHelper.AutoScroll="True" VerticalScrollBarVisibility="Visible">
+
+                                <ItemsControl Margin="10" Focusable="True" ItemsSource="{Binding Log, Source={x:Static utils:Logger.Instance}}" Foreground="#FF333333" FontSize="16"/>
+
                             </ScrollViewer>
-                            <Button Height="20" Width="20" Command="{Binding ClearLogCommand}" ToolTip="Clear Log" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5" Content="Х"/>
-                        </Grid>
+                        </Border>
+                        <Button
+                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Width="24.5"
+                            Height="26"
+                            Margin="5,5,10,5" 
+                            Style="{StaticResource VS2012WindowStyleTitleBarButton}"
+                            WindowChrome.IsHitTestVisibleInChrome="True" Cursor="Hand" IsDefault="True" Command="{Binding ClearLogCommand}">
+                            <Grid MaxHeight="13" MaxWidth="13">
+                                <Path
+                                    Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                    StrokeThickness="1.5"
+                                    Stretch="UniformToFill"
+                                    Data="M0,0 L8,8 M0,8 L8,0"
+                                />
+                            </Grid>
+                        </Button>
                     </Grid>
-                </Border>
+                </Grid>
             </Grid>
 
             <Grid x:Name="ProgressPanel" Grid.Row="4">
