@@ -14,6 +14,7 @@
         MinHeight="800" MinWidth="820"
         WindowStartupLocation="CenterScreen" Style="{DynamicResource MainWindowStyle}">
     <Window.Resources>
+        
         <HierarchicalDataTemplate DataType="{x:Type items:FolderItemViewModel}" ItemsSource="{Binding Childrens}">
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding QuickUpdate}"/>
@@ -105,6 +106,7 @@
                         </RadioButton>
                     </StackPanel>
                     <StackPanel Margin="25,20,0,0">
+                        <CheckBox Content="Показывать размер файлов"  FontSize="15" Style="{DynamicResource CheckBoxStyle}" FontFamily="Arial" Template="{DynamicResource ImageMaskCheckboxTempalte}"/>
                         <CheckBox Content="Показывать размер файлов"  FontSize="15" Style="{DynamicResource CheckBoxStyle}" FontFamily="Arial"/>
                         <CheckBox Content="Показывать Хеш-суммы файлов"  FontSize="15" Margin="0,3" Style="{DynamicResource CheckBoxStyle}"/>
                     </StackPanel>
