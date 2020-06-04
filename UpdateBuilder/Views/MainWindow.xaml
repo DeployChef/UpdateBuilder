@@ -17,19 +17,28 @@
         
         <HierarchicalDataTemplate DataType="{x:Type items:FolderItemViewModel}" ItemsSource="{Binding Childrens}">
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding QuickUpdate}"/>
-                <TextBlock Text="{Binding Name}" Foreground="#FFCFCFCF" Margin="5,0,0,0"/>
+
+                <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
+
+                <CheckBox  Margin="7,0,0,0"  Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
+
+                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
             </StackPanel>
         </HierarchicalDataTemplate>
 
         <DataTemplate DataType="{x:Type items:FileItemViewModel}">
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding QuickUpdate}"/>
-                <TextBlock Text="{Binding Name}" Margin="5,0,0,0"/>
-                <TextBlock Text="{Binding Size}" Margin="5,0,0,0"/>
-                <TextBlock Text="{Binding Hash}" Margin="5,0,0,0"/>
+                <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
+
+                <CheckBox  Margin="7,0,0,0" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
+
+                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
+                <!--<TextBlock Text="{Binding Size}" Margin="5,0,0,0" FontSize="14"/>
+                <TextBlock Text="{Binding Hash}" Margin="5,0,0,0" FontSize="14"/>-->
             </StackPanel>
         </DataTemplate>
+
+    
 
     </Window.Resources>
     <Grid>
@@ -106,7 +115,6 @@
                         </RadioButton>
                     </StackPanel>
                     <StackPanel Margin="25,20,0,0">
-                        <CheckBox Content="Показывать размер файлов"  FontSize="15" Style="{DynamicResource CheckBoxStyle}" FontFamily="Arial" Template="{DynamicResource ImageMaskCheckboxTempalte}"/>
                         <CheckBox Content="Показывать размер файлов"  FontSize="15" Style="{DynamicResource CheckBoxStyle}" FontFamily="Arial"/>
                         <CheckBox Content="Показывать Хеш-суммы файлов"  FontSize="15" Margin="0,3" Style="{DynamicResource CheckBoxStyle}"/>
                     </StackPanel>
@@ -192,7 +200,7 @@
                         </Grid.RowDefinitions>
 
                     <Border BorderBrush="#FFECE9F1" BorderThickness="1" CornerRadius="10">
-                        <TreeView Style="{DynamicResource TreeViewStyle}" Grid.Row="0" Margin="5" ItemsSource="{Binding MainFolder}" Grid.ColumnSpan="2"/>
+                        <TreeView Style="{DynamicResource TreeViewStyle}" Grid.Row="0" Margin="5" ItemsSource="{Binding MainFolder}" HorizontalContentAlignment="Center" Grid.ColumnSpan="2"/>
                     </Border>
                     <controls:BusyIndicator Grid.Row="0" IsBusy="{Binding IsBusy}" Style="{DynamicResource NewBusy}" Grid.ColumnSpan="2"/>
 

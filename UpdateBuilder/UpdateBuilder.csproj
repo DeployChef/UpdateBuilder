@@ -201,5 +201,13 @@
     <Resource Include="Resource\Figura.png" />
     <Resource Include="Resource\Tsentr.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\CheckHash_Off.png" />
+    <Resource Include="Resource\CheckHash_On.png" />
+    <Resource Include="Resource\Critical.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Critical_off.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
