@@ -105,30 +105,30 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Grid Width="15"
+                    <Grid Width="13"  x:Name="ToglePath"
               Height="13"
               Background="Transparent">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CheckStates">
                                 <VisualState x:Name="Checked">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                 Storyboard.TargetName="Collapsed">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                            Value="{x:Static Visibility.Hidden}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                 Storyboard.TargetName="Expanded">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                            Value="{x:Static Visibility.Visible}" />
-                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(LayoutTransform).(RotateTransform.Angle)" Storyboard.TargetName="ToglePath">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="90"/>
+                                        </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Unchecked" />
+                                <VisualState x:Name="Unchecked" >
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(LayoutTransform).(RotateTransform.Angle)" Storyboard.TargetName="ToglePath">
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+
                                 <VisualState x:Name="Indeterminate" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Path x:Name="Collapsed"
+                        <Path
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"          
                 Margin="1"
@@ -136,17 +136,13 @@
                             <Path.Stroke>
                                 <SolidColorBrush Color="{DynamicResource GlyphColor}" />
                             </Path.Stroke>
+                            <Path.LayoutTransform>
+                                <RotateTransform Angle="0"></RotateTransform>
+                            </Path.LayoutTransform>
                         </Path>
-                        <Path x:Name="Expanded"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Margin="1"
-                Data="M11 1L6 7L1 1"
-                Visibility="Hidden">
-                            <Path.Stroke>
-                                <SolidColorBrush Color="{DynamicResource GlyphColor}" />
-                            </Path.Stroke>
-                        </Path>
+                        <Grid.LayoutTransform>
+                            <RotateTransform Angle="0"></RotateTransform>
+                        </Grid.LayoutTransform>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
