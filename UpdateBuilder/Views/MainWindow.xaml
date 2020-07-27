@@ -20,7 +20,7 @@
 
                 <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
 
-                <CheckBox  Margin="7,0,0,0"  Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
+                <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0"  Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
 
                 <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
             </StackPanel>
@@ -30,7 +30,7 @@
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
 
-                <CheckBox  Margin="7,0,0,0" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
+                <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
 
                 <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
                 <!--<TextBlock Text="{Binding Size}" Margin="5,0,0,0" FontSize="14"/>

@@ -3,29 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace UpdateBuilder.Models
 {
-    [DataContract(Name = "File", Namespace = "")]
+    [XmlRoot("File")]
     public class FileModel
     {
-        [DataMember(Name = "Name", IsRequired = true, Order = 0)]
         public string Name { get; set; }
 
+        [XmlIgnore]
         public string ParentName { get; set; }
 
+        [XmlIgnore]
         public string FullPath { get; set; }
 
-        [DataMember(Name = "Path", IsRequired = true, Order = 1)]
         public string Path { get; set; }
 
-        [DataMember(Name = "Size", IsRequired = true, Order = 2)]
         public long Size { get; set; }
 
-        [DataMember(Name = "Hash", IsRequired = true, Order = 3)]
         public string Hash { get; set; }
 
-        [DataMember(Name = "QuickUpdate", IsRequired = true, Order = 4)]
         public bool QuickUpdate { get; set; }
+
+        public bool CheckHash { get; set; }
     }
 }
