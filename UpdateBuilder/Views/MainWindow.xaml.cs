@@ -73,5 +73,18 @@ namespace UpdateBuilder.Views
 
             return null;
         }
+
+        private void ButtonOut_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                if (Directory.Exists(files[0]))
+                {
+                    OutPath.Text = files[0];
+                }
+            }
+        }
     }
 }

@@ -204,9 +204,7 @@
 
                         <Grid>
 
-                            <Grid.Background>
-                                <ImageBrush ImageSource="/UpdateBuilder;component/Resource/Frame.png"/>
-                            </Grid.Background>
+                         
 
                             <Border
                             x:Name="PART_Border"

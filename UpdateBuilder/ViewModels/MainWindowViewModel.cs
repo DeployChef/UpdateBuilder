@@ -107,8 +107,8 @@ namespace UpdateBuilder.ViewModels
             BuildUpdateCommand = new RelayCommand(o => BuildUpdateAsync(), can => !IsBusy && !string.IsNullOrWhiteSpace(PatchPath) && !string.IsNullOrWhiteSpace(OutPath));
            
             Logger.Instance.Add("Ready to work");
-            PatchPath = @"D:\123\123";
-            OutPath = @"D:\BuilderTest\Out";
+            PatchPath = @"D:\123\NewUpdate";
+            OutPath = @"D:\123\Result";
         }
         private async void LoadInfoAsync()
         {

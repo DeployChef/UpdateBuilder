@@ -118,7 +118,7 @@
 
             <Grid x:Name="HeaderPanel" Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
-                    <Button Command="{Binding GoToSiteCommand}" Width="170.75" Template="{DynamicResource UpNovaLinkStyle}" Margin="0,3.333,0,6.75">
+                    <Button Command="{Binding GoToSiteCommand}" Cursor="Hand" Width="170.75" Template="{DynamicResource UpNovaLinkStyle}" Margin="0,3.333,0,6.75">
                         <Button.Background>
                             <ImageBrush ImageSource="/UpdateBuilder;component/Resource/LogoUpNova.png"/>
                         </Button.Background>
@@ -150,8 +150,8 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="59*"/>
-                    <ColumnDefinition Width="69*"/>
+                    <ColumnDefinition Width="65*"/>
+                    <ColumnDefinition Width="65*"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="01. Загрузите файлы патча" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
@@ -174,9 +174,11 @@
                     </Grid>
 
                     <TextBlock Margin="62,11,30,5"  FontSize="14" TextWrapping="Wrap">
-                            <Run Text="Переместите сюда папку с патчем или" Foreground="#FF80A9F0"/>
-                            <Run Text="нажмите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>      
-                            <Run Text="чтобы выбрать вручную" Foreground="#FF80A9F0"/>
+                        <Run Text="Перетащите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>    
+                        <Run Text="или" Foreground="#FF80A9F0"/>
+                        <Run Text="нажмите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>    
+                        <Run Text="чтобы выбрать папку с файлами для патча" Foreground="#FF80A9F0"/>
+                        
 
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
@@ -194,6 +196,46 @@
                 </Grid>
 
                 <Grid Grid.Row="1" Grid.Column="1">
+
+                    <Grid  Margin="62,21,53,19">
+                        <TextBlock x:Name="OutPath" Text="{Binding OutPath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="#FF94BCFF" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                        <Rectangle  Fill="#FF94BCFF" Margin="0,16,0,3.333"/>
+                        <Grid.Style>
+                            <Style TargetType="{x:Type Grid}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=OutPath, Path=Text}" Value="">
+                                        <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                    </Grid>
+
+                    <TextBlock Margin="62,11,30,5"  FontSize="14" TextWrapping="Wrap">
+                        <Run Text="Перетащите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>    
+                        <Run Text="или" Foreground="#FF80A9F0"/>
+                        <Run Text="нажмите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>       
+                        <Run Text="чтобы выбрать" Foreground="#FF80A9F0"/>
+                        <Run Text="пустую папку" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>   
+                        <Run Text="или уже" Foreground="#FF80A9F0"/>
+                        <Run Text="собраный патч" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=OutPath, Path=Text}" Value="">
+                                        <Setter Property="TextBox.Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetOutPathCommand}" Margin="10,5,30,5" AllowDrop="True" Drop="ButtonOut_Drop" Cursor="Hand"/>
+                </Grid>
+
+
+                <!--<Grid Grid.Row="1" Grid.Column="1">
                     <Rectangle Fill="#FF94BCFF" Width="24" Height="24" Margin="15.146,12.271,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Rectangle.OpacityMask>
                             <ImageBrush ImageSource="/UpdateBuilder;component/Resource/minFolder.png"/>
@@ -205,7 +247,7 @@
 
                     <Rectangle Margin="57.984,41.333,131.73,0" Fill="#FF94BCFF" Height="1" VerticalAlignment="Top"/>
                     <Button Content="Выбрать" Command="{Binding SetOutPathCommand}" Height="36.312" Margin="0,7.146,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="117" FontSize="14" Style="{DynamicResource RegularButton}" Foreground="White"/>
-                </Grid>
+                </Grid>-->
 
             </Grid>
 
