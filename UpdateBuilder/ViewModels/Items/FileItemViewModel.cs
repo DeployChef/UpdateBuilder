@@ -1,4 +1,6 @@
-﻿using UpdateBuilder.Models;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using UpdateBuilder.Models;
 using UpdateBuilder.ViewModels.Base;
 
 namespace UpdateBuilder.ViewModels.Items
@@ -9,6 +11,9 @@ namespace UpdateBuilder.ViewModels.Items
         private string _hash;
         private bool _quickUpdate;
         private bool _checkHash;
+        private ModifyType _modifyType;
+
+        private ObservableCollection<FileUpdateItemViewModel> _fileUpdates;
 
         public string FullPath { get; set; }
 
@@ -38,15 +43,31 @@ namespace UpdateBuilder.ViewModels.Items
             set => SetProperty(ref _checkHash, value);
         }
 
+        public ModifyType ModifyType
+        {
+            get => _modifyType;
+            set => SetProperty(ref _modifyType, value);
+        }
+
+        public ObservableCollection<FileUpdateItemViewModel> FileUpdates
+        {
+            get => _fileUpdates;
+            set => SetProperty(ref _fileUpdates, value);
+        }
+
+
+
         public FileItemViewModel(FileModel model)
         {
             Name = model.Name;
             Size = model.Size;
             Hash = model.Hash;
-            QuickUpdate = true;
-            CheckHash = true;
+            QuickUpdate = model.QuickUpdate;
+            CheckHash = model.CheckHash;
             FullPath = model.FullPath;
             Path = model.Path;
+            ModifyType = model.ModifyType;
+            FileUpdates = new ObservableCollection<FileUpdateItemViewModel>(model.FileUpdates.Select(c => new FileUpdateItemViewModel(c)));
         }
 
         public FileModel ToModel()
@@ -59,7 +80,8 @@ namespace UpdateBuilder.ViewModels.Items
                 QuickUpdate = QuickUpdate,
                 CheckHash = CheckHash,
                 FullPath = FullPath,
-                Path = Path
+                Path = Path,
+                ModifyType = ModifyType
             };
         }
     }

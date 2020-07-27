@@ -8,6 +8,7 @@
         xmlns:controls="clr-namespace:UpdateBuilder.Controls"
         xmlns:utils="clr-namespace:UpdateBuilder.Utils"
         xmlns:views="clr-namespace:UpdateBuilder.Views"
+        xmlns:models="clr-namespace:UpdateBuilder.Models"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Title="UpdateBuilder" Height="852" Width="834"
@@ -23,17 +24,53 @@
 
                 <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0"  Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
 
-                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
+                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.New}">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Deleted}">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Modified}">
+                                    <Setter Property="Foreground" Value="Blue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </StackPanel>
         </HierarchicalDataTemplate>
 
-        <DataTemplate DataType="{x:Type items:FileItemViewModel}">
+        <HierarchicalDataTemplate DataType="{x:Type items:FileItemViewModel}" ItemsSource="{Binding Childrens}">
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
 
                 <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
 
-                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
+                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.New}">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Deleted}">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Modified}">
+                                    <Setter Property="Foreground" Value="Blue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
                 <TextBlock Text="{Binding Size}" Margin="5,0,0,0" FontSize="14">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
@@ -57,7 +94,7 @@
                     </TextBlock.Style>
                 </TextBlock>
             </StackPanel>
-        </DataTemplate>
+        </HierarchicalDataTemplate>
 
     
 

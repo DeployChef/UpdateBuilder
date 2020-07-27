@@ -12,11 +12,18 @@ namespace UpdateBuilder.ViewModels.Items
     {
         private bool _quickUpdate;
         private bool _checkHash;
+        private ModifyType _modifyType;
         private ObservableCollection<FileItemViewModel> _files;
         private ObservableCollection<FolderItemViewModel> _folders;
         private ObservableCollection<ItemViewModel> _childrens;
 
         public bool Updating { get; set; }
+
+        public ModifyType ModifyType
+        {
+            get => _modifyType;
+            set => SetProperty(ref _modifyType, value);
+        }
 
         public ObservableCollection<FileItemViewModel> Files
         {
@@ -94,8 +101,9 @@ namespace UpdateBuilder.ViewModels.Items
             Childrens = new ObservableCollection<ItemViewModel>();
             Childrens.AddRange(Folders);
             Childrens.AddRange(Files);
-            CheckHash = true;
-            QuickUpdate = true;
+            CheckHash = GetCheckHashRecurse(this);
+            QuickUpdate = GetQuickUpdateRecurse(this);
+            ModifyType = model.ModifyType;
         }
 
         public int GetCount()
@@ -106,6 +114,18 @@ namespace UpdateBuilder.ViewModels.Items
         public long GetSize()
         {
            return GetSizeRecurce(this);
+        }
+
+        private bool GetCheckHashRecurse(FolderItemViewModel rootFolder)
+        {
+            var checkHash = rootFolder.Folders.All(GetCheckHashRecurse);
+            return checkHash && rootFolder.Files.All(c=>c.CheckHash);
+        }
+
+        private bool GetQuickUpdateRecurse(FolderItemViewModel rootFolder)
+        {
+            var quickUpdate = rootFolder.Folders.All(GetQuickUpdateRecurse);
+            return quickUpdate && rootFolder.Files.All(c => c.QuickUpdate);
         }
 
         private int GetCountRecurce(FolderItemViewModel rootFolder)
@@ -124,7 +144,7 @@ namespace UpdateBuilder.ViewModels.Items
 
         private FolderModel GetFolderRecurce(FolderItemViewModel rootFolder)
         {
-            var folderModel = new FolderModel{Name = rootFolder.Name };
+            var folderModel = new FolderModel{ Name = rootFolder.Name };
             foreach (var folder in rootFolder.Folders)
             {
                 folderModel.Folders.Add(GetFolderRecurce(folder));

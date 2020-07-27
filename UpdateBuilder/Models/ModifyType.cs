@@ -10,6 +10,7 @@ namespace UpdateBuilder.Models
     {
         New,
         Modified,
-        Deleted
+        Deleted,
+        NotModified
     }
 }
