@@ -150,11 +150,11 @@ namespace UpdateBuilder.Utils
 
         private static void BuildUpdateInfo(UpdateInfoModel updateInfo, string outPath)
         {
-            DataContractSerializer dcs = new DataContractSerializer(typeof(UpdateInfoModel));
+            var serializer = new XmlSerializer(typeof(UpdateInfoModel));
             var settings = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
 
             using (var w = XmlWriter.Create($"{outPath}\\UpdateInfo.xml", settings))
-                dcs.WriteObject(w, updateInfo);
+                serializer.Serialize(w, updateInfo);
         }
 
         protected virtual void OnProgressChanged()

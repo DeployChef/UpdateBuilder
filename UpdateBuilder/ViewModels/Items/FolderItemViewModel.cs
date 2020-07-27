@@ -11,6 +11,7 @@ namespace UpdateBuilder.ViewModels.Items
     public class FolderItemViewModel : ItemViewModel
     {
         private bool _quickUpdate;
+        private bool _checkHash;
         private ObservableCollection<FileItemViewModel> _files;
         private ObservableCollection<FolderItemViewModel> _folders;
         private ObservableCollection<ItemViewModel> _childrens;
@@ -42,7 +43,17 @@ namespace UpdateBuilder.ViewModels.Items
             {
                 SetProperty(ref _quickUpdate, value);
                 if(!Updating)
-                SetRecurceQuickUpdate(this, value);
+                    SetRecurceQuickUpdate(this, value);
+            }
+        }
+
+        public bool CheckHash
+        {
+            get => _checkHash;
+            set
+            {
+                SetProperty(ref _checkHash, value);
+                SetRecurseCheckHash(this, value);
             }
         }
 
@@ -50,15 +61,27 @@ namespace UpdateBuilder.ViewModels.Items
         {
             foreach (var folder in rootFolder.Folders)
             {
-                folder.Updating = true;
                 folder.QuickUpdate = value;
                 SetRecurceQuickUpdate(folder, value);
-                folder.Updating = false;
             }
 
             foreach (var file in rootFolder.Files)
             {
                 file.QuickUpdate = value;
+            }
+        }
+
+        private void SetRecurseCheckHash(FolderItemViewModel rootFolder, bool value)
+        {
+            foreach (var folder in rootFolder.Folders)
+            {
+                folder.CheckHash = value;
+                SetRecurseCheckHash(folder, value);
+            }
+
+            foreach (var file in rootFolder.Files)
+            {
+                file.CheckHash = value;
             }
         }
 
@@ -71,6 +94,8 @@ namespace UpdateBuilder.ViewModels.Items
             Childrens = new ObservableCollection<ItemViewModel>();
             Childrens.AddRange(Folders);
             Childrens.AddRange(Files);
+            CheckHash = true;
+            QuickUpdate = true;
         }
 
         public int GetCount()

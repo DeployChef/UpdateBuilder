@@ -13,7 +13,7 @@
                                 Height="Auto"
                                 Fill="Transparent" />
                         <Border x:Name="CornerScrollBarRectangle"
-                            CornerRadius="5"
+                            CornerRadius="3"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Width="Auto"
@@ -60,7 +60,7 @@
                             Focusable="false">
                             <Track.Thumb>
                                 <Thumb x:Name="Thumb"
-                                    Background="#1ABC9C"
+                                    Background="#4684EB"
                                     Style="{DynamicResource ScrollBarTrackThumb}" />
                             </Track.Thumb>
                             <Track.IncreaseRepeatButton>
@@ -81,7 +81,7 @@
                         <Trigger SourceName="Thumb"
                                 Property="IsMouseOver"
                                 Value="true">
-                            <Setter Value="#FF1CD6B2"
+                            <Setter Value="#4684EB"
                                 TargetName="Thumb"
                                 Property="Background" />
                         </Trigger>

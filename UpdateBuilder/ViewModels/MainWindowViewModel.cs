@@ -17,7 +17,7 @@ namespace UpdateBuilder.ViewModels
         private bool _inBuilding;
         private string _pathPath;
         private string _outPath;
-        private string _totalSize;
+        private string _totalSize = ((long)0).BytesToString();
         private int _totalCount;
         private int _progressValue;
         private ObservableCollection<FolderItemViewModel> _mainFolder = new ObservableCollection<FolderItemViewModel>();
@@ -107,8 +107,8 @@ namespace UpdateBuilder.ViewModels
             BuildUpdateCommand = new RelayCommand(o => BuildUpdateAsync(), can => !IsBusy && !string.IsNullOrWhiteSpace(PatchPath) && !string.IsNullOrWhiteSpace(OutPath));
            
             Logger.Instance.Add("Ready to work");
-            //PatchPath = @"D:\BuilderTest\UpdateFiles";
-            //OutPath = @"D:\BuilderTest\Out";
+            PatchPath = @"D:\123\123";
+            OutPath = @"D:\BuilderTest\Out";
         }
         private async void LoadInfoAsync()
         {

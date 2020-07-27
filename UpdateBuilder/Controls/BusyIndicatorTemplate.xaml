@@ -2,6 +2,75 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:UpdateBuilder.Controls">
 
+    <Style x:Key="NewBusy" TargetType="{x:Type local:BusyIndicator}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:BusyIndicator}">
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="SpinerAnimation" RepeatBehavior="Forever">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" 
+                                                           Storyboard.TargetName="Spiner">
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="Spiner">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="-1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <Border x:Name="ContentBorder" 
+                            SnapsToDevicePixels="True"
+                            Visibility="Hidden"
+                            IsHitTestVisible="{TemplateBinding IsBusy}" 
+                            Background="Transparent"
+                            HorizontalAlignment="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HorizontalAlignment}"
+                            VerticalAlignment="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=VerticalAlignment}">
+                        <Grid IsHitTestVisible="False" Background="{TemplateBinding Background}">
+                            <DockPanel IsHitTestVisible="False"
+                                       HorizontalAlignment="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HorizontalContentAlignment}"
+                                       VerticalAlignment="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=VerticalContentAlignment}">
+
+                                <Grid Height="81" Width="86" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="/UpdateBuilder;component/Resource/Figura.png"/>
+                                    </Grid.Background>
+                                    <Rectangle x:Name="Spiner" RenderTransformOrigin="0.5,0.5" Width="24" Height="28" Margin="29.771,15.979,32.229,37.021" >
+                                        <Rectangle.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                                                <SkewTransform AngleY="0" AngleX="0"/>
+                                                <RotateTransform/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </Rectangle.RenderTransform>
+                                        <Rectangle.Fill>
+                                            <ImageBrush ImageSource="/UpdateBuilder;component/Resource/Tsentr.png"/>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                </Grid>
+                            </DockPanel>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsBusy" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="SpinerAnimation" Storyboard="{StaticResource SpinerAnimation}"/>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="SpinerAnimation"/>
+                            </Trigger.ExitActions>
+                            <Setter Property="Visibility" TargetName="ContentBorder" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type local:BusyIndicator}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>

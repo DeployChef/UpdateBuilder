@@ -3,34 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace UpdateBuilder.Models
 {
-    [DataContract(Name = "Folder", Namespace = "")]
+    [XmlRoot("Folder")]
     public class FolderModel
     {
-        [DataMember(Name = "Name", IsRequired = true, Order = 0)]
         public string Name { get; set; }
 
+        [XmlIgnore]
         public string Path { get; set; }
 
-        [DataMember(Name = "Folders", IsRequired = true, Order = 1)]
-        public Folders Folders { get; set; } = new Folders();
+        [XmlArray("Folders")]
+        public List<FolderModel> Folders { get; set; } = new List<FolderModel>();
 
-        [DataMember(Name = "Files", IsRequired = true, Order = 2)]
-        public Files Files { get; set; } = new Files();
+        [XmlArray("Files")]
+        public List<FileModel> Files { get; set; } = new List<FileModel>();
     }
-
-    [CollectionDataContract(Name = "Files", Namespace = "")]
-    public class Files : List<FileModel>
-    {
-
-    }
-
-    [CollectionDataContract(Name = "Folders", Namespace = "")]
-    public class Folders : List<FolderModel>
-    {
-
-    }
-
 }

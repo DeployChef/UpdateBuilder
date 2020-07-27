@@ -165,6 +165,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Styles\Montserrat.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -175,6 +176,38 @@
   <ItemGroup>
     <Resource Include="Resource\loading-wheel-trans.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resource\LogoUpNova.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Frame 1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Frame.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Ru.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\En.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\bigFolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\minFolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Figura.png" />
+    <Resource Include="Resource\Tsentr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\CheckHash_Off.png" />
+    <Resource Include="Resource\CheckHash_On.png" />
+    <Resource Include="Resource\Critical.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Critical_off.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

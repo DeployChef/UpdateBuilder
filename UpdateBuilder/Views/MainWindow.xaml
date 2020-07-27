@@ -7,99 +7,309 @@
         xmlns:items="clr-namespace:UpdateBuilder.ViewModels.Items"
         xmlns:controls="clr-namespace:UpdateBuilder.Controls"
         xmlns:utils="clr-namespace:UpdateBuilder.Utils"
+        xmlns:views="clr-namespace:UpdateBuilder.Views"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-        Title="UpdateBuilder" Height="600" Width="700"
-        Background="#FF0A0A0B" 
-        MinHeight="600" MinWidth="600"
-        WindowStartupLocation="CenterScreen">
+        Title="UpdateBuilder" Height="852" Width="834"
+        Background="White" 
+        MinHeight="800" MinWidth="820"
+        WindowStartupLocation="CenterScreen" Style="{DynamicResource MainWindowStyle}">
     <Window.Resources>
+        
         <HierarchicalDataTemplate DataType="{x:Type items:FolderItemViewModel}" ItemsSource="{Binding Childrens}">
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding QuickUpdate}"/>
-                <TextBlock Text="{Binding Name}" Foreground="#FFCFCFCF" Margin="5,0,0,0"/>
+
+                <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
+
+                <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0"  Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
+
+                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
             </StackPanel>
         </HierarchicalDataTemplate>
 
         <DataTemplate DataType="{x:Type items:FileItemViewModel}">
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding QuickUpdate}"/>
-                <TextBlock Text="{Binding Name}" Margin="5,0,0,0"/>
-                <TextBlock Text="{Binding Size}" Margin="5,0,0,0"/>
-                <TextBlock Text="{Binding Hash}" Margin="5,0,0,0"/>
+                <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
+
+                <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
+
+                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
+                <TextBlock Text="{Binding Size}" Margin="5,0,0,0" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=ShowSizeCheckbox, Path=IsChecked}" Value="false">
+                                    <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock Text="{Binding Hash}" Margin="5,0,0,0" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=ShowHashCheckbox, Path=IsChecked}" Value="false">
+                                    <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </StackPanel>
         </DataTemplate>
 
+    
+
     </Window.Resources>
-    <Grid Margin="3,10,3,3">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+    <Grid>
+        <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Width="62.416" Margin="0,17.25,10,0">
+            <Button
+                                            x:Name="MinButton"
+                                            VerticalAlignment="Top"
+                                            Width="27.583"
+                                            Height="26"
+                                            Style="{StaticResource VS2012WindowStyleTitleBarButton}"
+                                            WindowChrome.IsHitTestVisibleInChrome="True" Cursor="Hand" Click="MinButton_Click" 
+                                            >
+                <Grid MaxHeight="14" MaxWidth="13">
+                    <Path
+                                                    Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                    StrokeThickness="1.5"
+                                                    Stretch="Fill"
+                                                    Data="M6,8 H8" Margin="0,12,0,0"
+                                                    />
+                </Grid>
+            </Button>
+
+            <Button
+                                            Grid.Column="4"
+                                            x:Name="CloseButton" 
+                                            VerticalAlignment="Top"
+                                            Width="24.5"
+                                            Height="26"
+                                            Style="{StaticResource VS2012WindowStyleTitleBarButton}"
+                                            WindowChrome.IsHitTestVisibleInChrome="True" Cursor="Hand" IsDefault="True" Click="CloseButton_Click"
+                                            >
+                <Grid MaxHeight="13" MaxWidth="13">
+                    <Path
+                                                    Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                    StrokeThickness="1.5"
+                                                    Stretch="UniformToFill"
+                                                    Data="M0,0 L8,8 M0,8 L8,0"
+                                                    />
+                </Grid>
+            </Button>
+        </StackPanel>
+
+
+        <Grid Margin="20,12,30,40">
             <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="25"/>
+                <RowDefinition Height="80"/>
+
+                <RowDefinition Height="20"/>
+
+                <RowDefinition Height="100"/>
+
+                <RowDefinition/>
+
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70"/>
-                <ColumnDefinition Width="67"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="80"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.RowSpan="2" Command="{Binding GoToSiteCommand}"  Margin="10,3,3,3" Template="{DynamicResource UpNovaLinkStyle}"/>
-            <TextBlock Text="Files path:" Grid.Row="0" Grid.Column="1" Margin="3"/>
-            <TextBlock Text="Out path:" Grid.Row="1" Grid.Column="1" Margin="3"/>
-            <TextBox Grid.Row="0" Grid.Column="2" Margin="3" Text="{Binding PatchPath}"  Foreground="#FFCFCFCF" IsReadOnly="True"/>
-            <TextBox Grid.Row="1" Grid.Column="2" Margin="3" Text="{Binding OutPath}" Foreground="#FFCFCFCF" IsReadOnly="True"/>
-            <Button Grid.Row="0" Grid.Column="3" Command="{Binding SetPatchPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
-            <Button Grid.Row="1" Grid.Column="3" Command="{Binding SetOutPathCommand}" Margin="3" Content="CHOOSE" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="371*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <TextBlock Margin="5" HorizontalAlignment="Center" Text="UPDATE FILES"  FontSize="18"/>
-                <StackPanel HorizontalAlignment="Left" Margin="0,0,20,0">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Files count:"/>
-                        <TextBlock Text="{Binding TotalCount}" Margin="5,0,0,0"/>
+
+            <Grid x:Name="HeaderPanel" Grid.Row="0">
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding GoToSiteCommand}" Width="170.75" Template="{DynamicResource UpNovaLinkStyle}" Margin="0,3.333,0,6.75">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/UpdateBuilder;component/Resource/LogoUpNova.png"/>
+                        </Button.Background>
+                    </Button>
+                    <StackPanel Margin="16,22,0,0" Visibility="Collapsed">
+                        <RadioButton Content="Ru" Template="{DynamicResource LangRadio}" Width="27" Height="21" Cursor="Hand" IsChecked="True">
+                            <RadioButton.Background>
+                                <ImageBrush ImageSource="/UpdateBuilder;component/Resource/Ru.png"/>
+                            </RadioButton.Background>
+                        </RadioButton>
+                        <RadioButton Content="Eng" Width="27" Height="21" Margin="0,7" Template="{DynamicResource LangRadio}" Cursor="Hand">
+                            <RadioButton.Background>
+                                <ImageBrush ImageSource="/UpdateBuilder;component/Resource/En.png"/>
+                            </RadioButton.Background>
+                        </RadioButton>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Patch size:"/>
-                        <TextBlock Text="{Binding TotalSize}" Margin="5,0,0,0"/>
+                    <StackPanel Margin="25,20,0,0">
+                        <CheckBox Content="Показывать размер файлов" x:Name="ShowSizeCheckbox" IsChecked="True"  FontSize="15" Style="{DynamicResource CheckBoxStyle}" FontFamily="Arial"/>
+                        <CheckBox Content="Показывать Хеш-суммы файлов" x:Name="ShowHashCheckbox"  IsChecked="True" FontSize="15" Margin="0,3" Style="{DynamicResource CheckBoxStyle}"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>
-            <Border Grid.Row="1" BorderThickness="1.3" BorderBrush="#123131">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="200*" MinHeight="200"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="100*" MinHeight="30"/>
-                    </Grid.RowDefinitions>
-                    <TreeView Grid.Row="0" Margin="5" Background="#FF040609" BorderBrush="Black" ItemsSource="{Binding MainFolder}"/>
-                    <GridSplitter Grid.Row="1" Height="6" Background="#FF212121" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#FF3E1414"/>
-                    <Grid Grid.Row="2">
-                        <ScrollViewer  utils:ScrollHelper.AutoScroll="True">
-                            <ItemsControl Margin="4" Focusable="True" Background="#FF212121" ItemsSource="{Binding Source={x:Static utils:Logger.Instance}, Path=Log}"/>
-                        </ScrollViewer>
-                        <Button Height="20" Width="20" Command="{Binding ClearLogCommand}" ToolTip="Clear Log" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5" Content="Х"/>
+
+            <Separator Grid.Row="1" Margin="10,0,0,0" Background="#6DA0A0A0"/>
+
+            <Grid x:Name="FilesPanel" Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="59*"/>
+                    <ColumnDefinition Width="69*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="01. Загрузите файлы патча" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
+                <TextBlock Grid.Column="1" Text="02. Куда будем сохранять патч для апдейтера ?" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
+
+                <Grid Grid.Row="1" Grid.Column="0">
+
+                    <Grid  Margin="62,21,53,19">
+                        <TextBlock x:Name="PatchPath" Text="{Binding PatchPath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="#FF94BCFF" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                        <Rectangle  Fill="#FF94BCFF" Margin="0,16,0,3.333"/>
+                        <Grid.Style>
+                            <Style TargetType="{x:Type Grid}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=PatchPath, Path=Text}" Value="">
+                                        <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                    </Grid>
+
+                    <TextBlock Margin="62,11,30,5"  FontSize="14" TextWrapping="Wrap">
+                            <Run Text="Переместите сюда папку с патчем или" Foreground="#FF80A9F0"/>
+                            <Run Text="нажмите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>      
+                            <Run Text="чтобы выбрать вручную" Foreground="#FF80A9F0"/>
+
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=PatchPath, Path=Text}" Value="">
+                                            <Setter Property="TextBox.Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                    </TextBlock>
+
+                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetPatchPathCommand}" Margin="10,5,30,5" AllowDrop="True" Drop="Button_Drop" Cursor="Hand"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Rectangle Fill="#FF94BCFF" Width="24" Height="24" Margin="15.146,12.271,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Rectangle.OpacityMask>
+                            <ImageBrush ImageSource="/UpdateBuilder;component/Resource/minFolder.png"/>
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+
+                    <TextBlock Text="Выберите папку" Margin="57.5,19,130.667,74.667" Foreground="#FF94BCFF" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding OutPath, UpdateSourceTrigger=PropertyChanged}" Margin="57.5,19,130.667,0" Foreground="#FF94BCFF" FontSize="14" TextTrimming="CharacterEllipsis" Height="22.333" VerticalAlignment="Top"/>
+
+                    <Rectangle Margin="57.984,41.333,131.73,0" Fill="#FF94BCFF" Height="1" VerticalAlignment="Top"/>
+                    <Button Content="Выбрать" Command="{Binding SetOutPathCommand}" Height="36.312" Margin="0,7.146,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="117" FontSize="14" Style="{DynamicResource RegularButton}" Foreground="White"/>
+                </Grid>
+
+            </Grid>
+
+            <Grid x:Name="MainPanel" Grid.Row="3"  Margin="8,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="371*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="20,15,20,10" Height="60">
+                    <Grid  Margin="20,0,0,0"  HorizontalAlignment="Center">
+                        <StackPanel  Orientation="Horizontal">
+                            <TextBlock  Text="Файлы обновления" TextAlignment="Center" VerticalAlignment="Center"  FontSize="18" Margin="0,28.4,0,10"/>
+                            <Rectangle Fill="#FF4684EB" RadiusX="90" RadiusY="90" Width="22" Height="22" Margin="0,12,0,19" Visibility="Hidden"/>
+                        </StackPanel>
+                    </Grid>
+                  
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                        <TextBlock Text="Количество файлов:" Foreground="#FF94BCFF" FontSize="14"/>
+                        <TextBlock Text="{Binding TotalCount}" Margin="5,0,0,0" Foreground="#FF4684EB" FontSize="14"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal"  VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                        <TextBlock Text="Размер патча:" Foreground="#FF94BCFF" FontSize="14"/>
+                        <TextBlock Text="{Binding TotalSize}" Margin="5,0,0,0" Foreground="#FF4684EB" FontSize="14"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="200*" MinHeight="200"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="100*" MinHeight="43"/>
+                        </Grid.RowDefinitions>
+
+                    <Border BorderBrush="#FFECE9F1" BorderThickness="1" CornerRadius="10">
+                        <TreeView Style="{DynamicResource TreeViewStyle}" Grid.Row="0" Margin="5" ItemsSource="{Binding MainFolder}" HorizontalContentAlignment="Center">
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="{x:Type TreeViewItem}">
+                                    <Setter Property="IsExpanded" Value="True"/>
+                                </Style>
+                            </TreeView.ItemContainerStyle>
+                        </TreeView>
+                    </Border>
+                    <controls:BusyIndicator Grid.Row="0" IsBusy="{Binding IsBusy}" Style="{DynamicResource NewBusy}" Grid.ColumnSpan="2"/>
+
+                    <GridSplitter Style="{DynamicResource NewSplitter}"  Grid.Row="1" Height="5" Margin="0,5" Width="80" Background="#94BCFF" HorizontalAlignment="Stretch" BorderThickness="0.5" BorderBrush="#94BCFF"/>
+
+                    <Grid Grid.Row="2" Margin="0,0,0,16">
+                        <Border BorderBrush="#FFECE9F1" BorderThickness="1" CornerRadius="10">
+
+                            <ItemsControl Margin="10" Focusable="True" ItemsSource="{Binding Log, Source={x:Static utils:Logger.Instance}}" Foreground="#FF333333" FontSize="16" 
+                                          Loaded="ItemsControl_Loaded">
+                                    <ItemsControl.Template>
+                                        <ControlTemplate>
+                                            <ScrollViewer CanContentScroll="True">
+                                                <ItemsPresenter/>
+                                            </ScrollViewer>
+                                        </ControlTemplate>
+                                    </ItemsControl.Template>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel IsItemsHost="True"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+
+
+                        </Border>
+                        <Button
+                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Width="24.5"
+                            Height="26"
+                            Margin="5,5,10,5" 
+                            Style="{StaticResource VS2012WindowStyleTitleBarButton}"
+                            WindowChrome.IsHitTestVisibleInChrome="True" Cursor="Hand" IsDefault="True" Command="{Binding ClearLogCommand}">
+                            <Grid MaxHeight="13" MaxWidth="13">
+                                <Path
+                                    Stroke="#FF848287"
+                                    StrokeThickness="1.5"
+                                    Stretch="UniformToFill"
+                                    Data="M0,0 L8,8 M0,8 L8,0"
+                                />
+                            </Grid>
+                        </Button>
                     </Grid>
                 </Grid>
-            </Border>
-            <controls:BusyIndicator Grid.Row="0" Grid.RowSpan="2" IsBusy="{Binding IsBusy}"/>
-            <Grid Grid.Row="2"  Margin="2">
-                <ProgressBar Height="15" Maximum="{Binding TotalCount}" Value="{Binding ProgressValue}" Background="#FF0B5952" BorderBrush="#FF0E645D" Foreground="#FF257A71" />
-                <TextBlock HorizontalAlignment="Center" Text="{Binding ProgressProcent}" Foreground="#FFE8CDCD"/>
             </Grid>
-            <Button Content="Cancel" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
-            <Button Content="Lets GO!" Command="{Binding BuildUpdateCommand}" Grid.Row="3" Margin="20,3,20,5" Foreground="#FFFFE6E6" FontFamily="Montserrat Alternates"/>
+
+            <Grid x:Name="ProgressPanel" Grid.Row="4" Margin="8,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Margin="0,0,5,0">
+                    <ProgressBar Maximum="{Binding TotalCount}" Value="{Binding ProgressValue}" Background="#ECE9F1" Foreground="#4684EB" Style="{DynamicResource CornerProgressBarStyle}" BorderBrush="{x:Null}" />
+                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding ProgressProcent}" Foreground="White"/>
+                </Grid>
+                <Grid Grid.Column="1"  Margin="8,0,0,0" >
+                    <Button Content="Отмена" Width="179" Style="{DynamicResource RegularButton}" Visibility="Hidden"/>
+                    <Button Content="Начать упаковку" Command="{Binding BuildUpdateCommand}" Width="179" Style="{DynamicResource RegularButton}"/>
+                </Grid>
+            </Grid>
+
         </Grid>
-        
     </Grid>
 </Window>

@@ -8,6 +8,7 @@ namespace UpdateBuilder.ViewModels.Items
         private long _size;
         private string _hash;
         private bool _quickUpdate;
+        private bool _checkHash;
 
         public string FullPath { get; set; }
 
@@ -31,12 +32,19 @@ namespace UpdateBuilder.ViewModels.Items
             set => SetProperty(ref _quickUpdate, value);
         }
 
+        public bool CheckHash
+        {
+            get => _checkHash;
+            set => SetProperty(ref _checkHash, value);
+        }
+
         public FileItemViewModel(FileModel model)
         {
             Name = model.Name;
             Size = model.Size;
             Hash = model.Hash;
-            QuickUpdate = model.QuickUpdate;
+            QuickUpdate = true;
+            CheckHash = true;
             FullPath = model.FullPath;
             Path = model.Path;
         }
@@ -49,6 +57,7 @@ namespace UpdateBuilder.ViewModels.Items
                 Size = Size,
                 Hash = Hash,
                 QuickUpdate = QuickUpdate,
+                CheckHash = CheckHash,
                 FullPath = FullPath,
                 Path = Path
             };
