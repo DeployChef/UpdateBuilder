@@ -60,6 +60,7 @@
     </ApplicationDefinition>
     <Compile Include="Controls\ToggleButonEx.cs" />
     <Compile Include="HashCalc\CRC32.cs" />
+    <Compile Include="Models\ModifyType.cs" />
     <Compile Include="Models\UpdateInfoModel.cs" />
     <Compile Include="Utils\StringHelper.cs" />
     <Compile Include="ZIPLib\Crc32.cs" />

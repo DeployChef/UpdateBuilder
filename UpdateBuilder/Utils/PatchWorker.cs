@@ -71,7 +71,7 @@ namespace UpdateBuilder.Utils
             {
                 token.ThrowIfCancellationRequested();
                 var hash = _hashCalc.Get(file.FullName);
-                folder.Files.Add(new FileModel() { Name = file.Name, ParentName = folder.Name, Hash = hash,
+                folder.Files.Add(new FileModel() { Name = file.Name, Hash = hash,
                     Size = file.Length, FullPath = file.FullName, Path = folder.Path});
                 Logger.Instance.Add($"Добавили {file} в {folder.Name}");
             }
@@ -87,11 +87,15 @@ namespace UpdateBuilder.Utils
                 {
                     token.ThrowIfCancellationRequested();
                     Logger.Instance.Add("Создаем патч лист");
+
                     BuildUpdateInfo(updateInfo, outPath);
+
                     Logger.Instance.Add("Патч лист создан");
 
                     Logger.Instance.Add("Начинаем паковать");
+
                     PuckingRecurse(updateInfo.Folder, $"{outPath}\\{updateInfo.Folder.Name}", token);
+
                     Logger.Instance.Add("Все запаковано");
                     return true;
                 }
@@ -160,6 +164,11 @@ namespace UpdateBuilder.Utils
         protected virtual void OnProgressChanged()
         {
             ProgressChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public async Task<FolderModel> CreateSyncFolderInfo(string patchPath, CancellationToken token)
+        {
+            throw new NotImplementedException();
         }
     }
 }

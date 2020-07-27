@@ -13,7 +13,7 @@ namespace UpdateBuilder.Models
         public string Name { get; set; }
 
         [XmlIgnore]
-        public string ParentName { get; set; }
+        public ModifyType ModifyType { get; set; }
 
         [XmlIgnore]
         public string FullPath { get; set; }
@@ -27,5 +27,21 @@ namespace UpdateBuilder.Models
         public bool QuickUpdate { get; set; }
 
         public bool CheckHash { get; set; }
+
+        [XmlArray("FileUpdates")]
+        public List<FileUpdateModel> FileUpdates { get; set; } = new List<FileUpdateModel>();
+    }
+
+    [XmlRoot("File")]
+    public class FileUpdateModel
+    {
+        public string Name { get; set; }
+
+        [XmlIgnore]
+        public ModifyType ModifyType { get; set; }
+
+        public string Hash { get; set; }
+
+        public int Version { get; set; }
     }
 }

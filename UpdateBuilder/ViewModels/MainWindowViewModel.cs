@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,8 @@ namespace UpdateBuilder.ViewModels
         private string _totalSize = ((long)0).BytesToString();
         private int _totalCount;
         private int _progressValue;
-        private ObservableCollection<FolderItemViewModel> _mainFolder = new ObservableCollection<FolderItemViewModel>();
+        private FolderModel _mainFolder;
+        private ObservableCollection<FolderItemViewModel> _syncFolder = new ObservableCollection<FolderItemViewModel>();
         private readonly PatchWorker _patchWorker;
         private CancellationTokenSource _cts;
 
@@ -69,10 +71,10 @@ namespace UpdateBuilder.ViewModels
             }
         }
 
-        public ObservableCollection<FolderItemViewModel> MainFolder
+        public ObservableCollection<FolderItemViewModel> SyncFolder
         {
-            get => _mainFolder;
-            set => SetProperty(ref _mainFolder, value);
+            get => _syncFolder;
+            set => SetProperty(ref _syncFolder, value);
         }
 
         public string TotalSize
@@ -114,7 +116,7 @@ namespace UpdateBuilder.ViewModels
         }
 
 
-        public bool CanSync => !string.IsNullOrEmpty(PatchPath) && !string.IsNullOrEmpty(OutPath)  && MainFolder.Any();
+        public bool CanSync => !string.IsNullOrEmpty(PatchPath) && !string.IsNullOrEmpty(OutPath)  && _mainFolder != null;
 
         public MainWindowViewModel()
         {
@@ -139,22 +141,15 @@ namespace UpdateBuilder.ViewModels
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
 
-            MainFolder.Clear();
+            _mainFolder = null;
             TotalCount = 0;
             TotalSize = "0";
             ProgressValue = 0;
             Logger.Instance.Clear();
 
-            var rootF = await _patchWorker.GetFolderInfoAsync(PatchPath, token);
+            _mainFolder = await _patchWorker.GetFolderInfoAsync(PatchPath, token);
 
-            if (rootF != null)
-            {
-                var rootFolder = new FolderItemViewModel(rootF);
-                TotalCount = rootFolder.GetCount();
-                TotalSize = rootFolder.GetSize().BytesToString();
-                MainFolder.Add(rootFolder);
-                ProgressValue = TotalCount;
-            }
+            CreateSyncFolder(_mainFolder);
 
             IsBusy = false;
             var cancel = _cts.IsCancellationRequested;
@@ -178,19 +173,46 @@ namespace UpdateBuilder.ViewModels
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
 
-            Logger.Instance.Add("Начинаем синхронизацию...");
-
-            if (!File.Exists(Path.Combine(OutPath, "UpdateInfo.xml")))
+            try
             {
-                Logger.Instance.Add("Файлов предыдущего патча не найдено");
+                Logger.Instance.Add("Начинаем синхронизацию...");
+
+                if (File.Exists(Path.Combine(OutPath, "UpdateInfo.xml")))
+                {
+                    var syncFolder = await _patchWorker.GetFolderInfoAsync(PatchPath, token);
+
+                    CreateSyncFolder(syncFolder);
+
+                    Logger.Instance.Add("Патч синхронизирован");
+                }
+                else
+                {
+                    Logger.Instance.Add("Файлов предыдущего патча не найдено");
+                }
+
+              
+            }
+            catch (Exception e)
+            {
+                Logger.Instance.Add("Во время синхронизации произошла ошибка");
+                Logger.Instance.Add(e.Message);
             }
 
             Logger.Instance.Add("Конец синхронизации");
-
             IsBusy = false;
             _cts = null;
 
             CommandManager.InvalidateRequerySuggested();
+        }
+
+        private void CreateSyncFolder(FolderModel syncF)
+        {
+            SyncFolder.Clear();
+            var syncFolder = new FolderItemViewModel(syncF);
+            TotalCount = syncFolder.GetCount();
+            TotalSize = syncFolder.GetSize().BytesToString();
+            SyncFolder.Add(syncFolder);
+            ProgressValue = TotalCount;
         }
 
 
@@ -206,7 +228,7 @@ namespace UpdateBuilder.ViewModels
             Logger.Instance.Clear();
             ProgressValue = 0;
 
-            var rootFolder = MainFolder.FirstOrDefault();
+            var rootFolder = SyncFolder.FirstOrDefault();
             if (rootFolder != null)
             {
                 var updateInfo = new UpdateInfoModel()
