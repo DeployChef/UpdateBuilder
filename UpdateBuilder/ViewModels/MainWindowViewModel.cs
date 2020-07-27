@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Input;
 using UpdateBuilder.Models;
+using UpdateBuilder.Properties;
 using UpdateBuilder.Utils;
 using UpdateBuilder.ViewModels.Base;
 using UpdateBuilder.ViewModels.Items;
@@ -24,11 +26,13 @@ namespace UpdateBuilder.ViewModels
         private readonly PatchWorker _patchWorker;
         private CancellationTokenSource _cts;
 
-        public RelayCommand SetPatchPathCommand { get; set; } 
-        public RelayCommand SetOutPathCommand { get; set; }
-        public RelayCommand GoToSiteCommand { get; set; }
-        public RelayCommand ClearLogCommand { get; set; }
-        public RelayCommand BuildUpdateCommand { get; set; }
+        public ICommand SetPatchPathCommand { get; set; } 
+        public ICommand SetOutPathCommand { get; set; }
+        public ICommand GoToSiteCommand { get; set; }
+        public ICommand ClearLogCommand { get; set; }
+        public ICommand BuildUpdateCommand { get; set; }
+
+        public ICommand SyncCommand { get; set; }
 
         public bool IsRoot
         {
@@ -41,14 +45,28 @@ namespace UpdateBuilder.ViewModels
             get => _pathPath;
             set
             {
-                SetProperty(ref _pathPath, value);
-                LoadInfoAsync();
+                if (SetProperty(ref _pathPath, value))
+                {
+                    Settings.Default.PatchPath = value;
+                    Settings.Default.Save();
+                    LoadInfoAsync();
+                }
+                   
             }
         }
         public string OutPath
         {
             get => _outPath;
-            set => SetProperty(ref _outPath, value);
+            set
+            {
+                if (SetProperty(ref _outPath, value))
+                {
+                    Settings.Default.OutPath = value;
+                    Settings.Default.Save();
+                    SyncInfoAsync();
+                }
+                 
+            }
         }
 
         public ObservableCollection<FolderItemViewModel> MainFolder
@@ -96,6 +114,8 @@ namespace UpdateBuilder.ViewModels
         }
 
 
+        public bool CanSync => !string.IsNullOrEmpty(PatchPath) && !string.IsNullOrEmpty(OutPath)  && MainFolder.Any();
+
         public MainWindowViewModel()
         {
             _patchWorker = new PatchWorker();
@@ -104,11 +124,12 @@ namespace UpdateBuilder.ViewModels
             SetOutPathCommand = new RelayCommand(o => { OutPath = GetPath(); }, can => !InBuilding);
             GoToSiteCommand = new RelayCommand(o => { Process.Start(@"http:\\upnova.ru"); });
             ClearLogCommand = new RelayCommand(o => { Logger.Instance.Clear(); });
+            SyncCommand = new RelayCommand(o => { SyncInfoAsync(); }, can => !IsBusy && CanSync);
             BuildUpdateCommand = new RelayCommand(o => BuildUpdateAsync(), can => !IsBusy && !string.IsNullOrWhiteSpace(PatchPath) && !string.IsNullOrWhiteSpace(OutPath));
            
             Logger.Instance.Add("Ready to work");
-            PatchPath = @"D:\123\NewUpdate";
-            OutPath = @"D:\123\Result";
+            PatchPath = Settings.Default.PatchPath;
+            OutPath = Settings.Default.OutPath;
         }
         private async void LoadInfoAsync()
         {
@@ -136,10 +157,42 @@ namespace UpdateBuilder.ViewModels
             }
 
             IsBusy = false;
+            var cancel = _cts.IsCancellationRequested;
+            _cts = null;
+
+            CommandManager.InvalidateRequerySuggested();
+
+            if (!cancel)
+                SyncInfoAsync();
+        }
+
+
+        private async void SyncInfoAsync()
+        {
+            if(!CanSync)
+                return;
+
+            IsBusy = true;
+
+            _cts?.Cancel(true);
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
+
+            Logger.Instance.Add("Начинаем синхронизацию...");
+
+            if (!File.Exists(Path.Combine(OutPath, "UpdateInfo.xml")))
+            {
+                Logger.Instance.Add("Файлов предыдущего патча не найдено");
+            }
+
+            Logger.Instance.Add("Конец синхронизации");
+
+            IsBusy = false;
             _cts = null;
 
             CommandManager.InvalidateRequerySuggested();
         }
+
 
         private async void BuildUpdateAsync()
         {
@@ -164,7 +217,7 @@ namespace UpdateBuilder.ViewModels
 
                 var result = await _patchWorker.BuildUpdateAsync(updateInfo, OutPath, token);
 
-                if (!token.IsCancellationRequested || result)
+                if (!token.IsCancellationRequested && result)
                 {
                     Logger.Instance.Add("--------------------------------------------");
                     Logger.Instance.Add("--------------ПАТЧ-ГОТОВ!------------");

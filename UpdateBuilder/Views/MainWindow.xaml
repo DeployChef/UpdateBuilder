@@ -151,11 +151,12 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="65*"/>
+                    <ColumnDefinition Width="10*"/>
                     <ColumnDefinition Width="65*"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="01. Загрузите файлы патча" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
-                <TextBlock Grid.Column="1" Text="02. Куда будем сохранять патч для апдейтера ?" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
+                <TextBlock Grid.Column="2" Text="02. Куда будем сохранять патч для апдейтера ?" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
 
                 <Grid Grid.Row="1" Grid.Column="0">
 
@@ -192,10 +193,14 @@
                             </TextBlock.Style>
                     </TextBlock>
 
-                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetPatchPathCommand}" Margin="10,5,30,5" AllowDrop="True" Drop="Button_Drop" Cursor="Hand"/>
+                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetPatchPathCommand}" Margin="10,5" AllowDrop="True" Drop="Button_Drop" Cursor="Hand"/>
                 </Grid>
 
-                <Grid Grid.Row="1" Grid.Column="1">
+                <Grid Grid.Column="1" Grid.Row="1">
+                    <Button Command="{Binding SyncCommand}"></Button>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.Column="2">
 
                     <Grid  Margin="62,21,53,19">
                         <TextBlock x:Name="OutPath" Text="{Binding OutPath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="#FF94BCFF" FontSize="14" TextTrimming="CharacterEllipsis"/>
@@ -211,7 +216,7 @@
                         </Grid.Style>
                     </Grid>
 
-                    <TextBlock Margin="62,11,30,5"  FontSize="14" TextWrapping="Wrap">
+                    <TextBlock Margin="62,11,21,5"  FontSize="14" TextWrapping="Wrap">
                         <Run Text="Перетащите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>    
                         <Run Text="или" Foreground="#FF80A9F0"/>
                         <Run Text="нажмите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>       
@@ -221,7 +226,7 @@
                         <Run Text="собраный патч" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Setter Property="TextBox.Visibility" Value="Hidden"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=OutPath, Path=Text}" Value="">
                                         <Setter Property="TextBox.Visibility" Value="Visible"/>
@@ -231,7 +236,7 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetOutPathCommand}" Margin="10,5,30,5" AllowDrop="True" Drop="ButtonOut_Drop" Cursor="Hand"/>
+                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetOutPathCommand}" Margin="10,5" AllowDrop="True" Drop="ButtonOut_Drop" Cursor="Hand"/>
                 </Grid>
 
 
