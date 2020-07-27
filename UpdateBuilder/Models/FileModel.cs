@@ -18,6 +18,9 @@ namespace UpdateBuilder.Models
         [XmlIgnore]
         public string FullPath { get; set; }
 
+        [XmlIgnore]
+        public bool Sync { get; set; }
+
         public string Path { get; set; }
 
         public long Size { get; set; }
@@ -36,6 +39,9 @@ namespace UpdateBuilder.Models
     public class FileUpdateModel
     {
         public string Name { get; set; }
+
+        [XmlIgnore]
+        public bool Sync { get; set; }
 
         [XmlIgnore]
         public ModifyType ModifyType { get; set; }

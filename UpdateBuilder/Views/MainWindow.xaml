@@ -46,7 +46,7 @@
             </StackPanel>
         </HierarchicalDataTemplate>
 
-        <HierarchicalDataTemplate DataType="{x:Type items:FileItemViewModel}" ItemsSource="{Binding Childrens}">
+        <HierarchicalDataTemplate DataType="{x:Type items:FileItemViewModel}" ItemsSource="{Binding FileUpdates}">
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
 

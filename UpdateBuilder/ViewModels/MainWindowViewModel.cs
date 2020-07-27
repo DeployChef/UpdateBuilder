@@ -116,7 +116,7 @@ namespace UpdateBuilder.ViewModels
         }
 
 
-        public bool CanSync => !string.IsNullOrEmpty(PatchPath) && !string.IsNullOrEmpty(OutPath)  && _mainFolder != null;
+        public bool CanSync => !string.IsNullOrEmpty(PatchPath) && !string.IsNullOrEmpty(OutPath) && _mainFolder != null;
 
         public MainWindowViewModel()
         {
@@ -149,7 +149,11 @@ namespace UpdateBuilder.ViewModels
 
             _mainFolder = await _patchWorker.GetFolderInfoAsync(PatchPath, token);
 
-            CreateSyncFolder(_mainFolder);
+            if (_mainFolder != null)
+            {
+                CreateSyncFolder(_mainFolder);
+            }
+          
 
             IsBusy = false;
             var cancel = _cts.IsCancellationRequested;
@@ -164,7 +168,7 @@ namespace UpdateBuilder.ViewModels
 
         private async void SyncInfoAsync()
         {
-            if(!CanSync)
+            if(!CanSync || IsBusy)
                 return;
 
             IsBusy = true;
@@ -177,9 +181,10 @@ namespace UpdateBuilder.ViewModels
             {
                 Logger.Instance.Add("Начинаем синхронизацию...");
 
-                if (File.Exists(Path.Combine(OutPath, "UpdateInfo.xml")))
+                var patchInfoPath = Path.Combine(OutPath, "UpdateInfo.xml");
+                if (File.Exists(patchInfoPath))
                 {
-                    var syncFolder = await _patchWorker.GetFolderInfoAsync(PatchPath, token);
+                    var syncFolder = await _patchWorker.SyncUpdateInfoAsync(_mainFolder, patchInfoPath, token);
 
                     CreateSyncFolder(syncFolder);
 
@@ -189,8 +194,6 @@ namespace UpdateBuilder.ViewModels
                 {
                     Logger.Instance.Add("Файлов предыдущего патча не найдено");
                 }
-
-              
             }
             catch (Exception e)
             {
@@ -234,7 +237,6 @@ namespace UpdateBuilder.ViewModels
                 var updateInfo = new UpdateInfoModel()
                 {
                     Folder = rootFolder.ToModel(),
-                    Version = 1
                 };
 
                 var result = await _patchWorker.BuildUpdateAsync(updateInfo, OutPath, token);

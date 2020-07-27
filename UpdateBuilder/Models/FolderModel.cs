@@ -16,6 +16,9 @@ namespace UpdateBuilder.Models
         public string Path { get; set; }
 
         [XmlIgnore]
+        public bool Sync { get; set; }
+
+        [XmlIgnore]
         public ModifyType ModifyType { get; set; }
 
         [XmlArray("Folders")]

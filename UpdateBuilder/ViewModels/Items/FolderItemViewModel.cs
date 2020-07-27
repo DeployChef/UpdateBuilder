@@ -103,7 +103,7 @@ namespace UpdateBuilder.ViewModels.Items
             Childrens.AddRange(Files);
             CheckHash = GetCheckHashRecurse(this);
             QuickUpdate = GetQuickUpdateRecurse(this);
-            ModifyType = model.ModifyType;
+            ModifyType = GetModifyType(this);
         }
 
         public int GetCount()
@@ -116,10 +116,23 @@ namespace UpdateBuilder.ViewModels.Items
            return GetSizeRecurce(this);
         }
 
+        private ModifyType GetModifyType(FolderItemViewModel rootFolder)
+        {
+            var modifyTypes = GetModifyTypeRecurse(rootFolder);
+            var modyfyGroups = modifyTypes.GroupBy(c => c).ToArray();
+            return modyfyGroups.Length == 1 ? modyfyGroups.First().Key : ModifyType.Modified;
+        }
+        private List<ModifyType> GetModifyTypeRecurse(FolderItemViewModel rootFolder)
+        {
+            var modifyTypes = rootFolder.Folders.SelectMany(GetModifyTypeRecurse).ToList();
+            modifyTypes.AddRange(rootFolder.Files.Select(c => c.ModifyType));
+            return modifyTypes;
+        }
+
         private bool GetCheckHashRecurse(FolderItemViewModel rootFolder)
         {
             var checkHash = rootFolder.Folders.All(GetCheckHashRecurse);
-            return checkHash && rootFolder.Files.All(c=>c.CheckHash);
+            return checkHash && rootFolder.Files.All(c => c.CheckHash);
         }
 
         private bool GetQuickUpdateRecurse(FolderItemViewModel rootFolder)

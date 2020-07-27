@@ -166,9 +166,121 @@ namespace UpdateBuilder.Utils
             ProgressChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task<FolderModel> CreateSyncFolderInfo(string patchPath, CancellationToken token)
+        public async Task<FolderModel> SyncUpdateInfoAsync(FolderModel mainFolder, string patchInfoPath, CancellationToken token)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() => {
+
+                var patchInfo = DeserializeUpdateInfo(patchInfoPath);
+                Logger.Instance.Add($"Данные о прошлом патче получены");
+
+                var syncFolder = SyncFolder(patchInfo.Folder, mainFolder);
+
+
+                return syncFolder;
+
+            }, token);
+        }
+
+        private FolderModel SyncFolder(FolderModel patchInfoFolder, FolderModel mainFolder)
+        {
+            FolderModel syncFolder;
+            if (patchInfoFolder.Name.Equals(mainFolder.Name))
+            {
+                syncFolder = new FolderModel { Name = mainFolder.Name, ModifyType = mainFolder.ModifyType, Path = mainFolder.Path };
+                SyncFolderRecurse(patchInfoFolder, mainFolder, syncFolder);
+                SyncFolderRecurse(mainFolder, patchInfoFolder, syncFolder);
+            }
+            else
+            {
+                syncFolder = new FolderModel { Name = "UpdateDiff" };
+                var syncPatchFolder = new FolderModel {Name = patchInfoFolder.Name, ModifyType = ModifyType.Deleted, Path = patchInfoFolder.Path};
+                var syncMainFolder = new FolderModel {Name = mainFolder.Name, ModifyType = mainFolder.ModifyType, Path = mainFolder.Path};
+                syncFolder.Folders.Add(syncPatchFolder);
+                syncFolder.Folders.Add(syncMainFolder);
+                SyncFolderRecurse(patchInfoFolder, null, syncPatchFolder);
+                SyncFolderRecurse(mainFolder, patchInfoFolder, syncMainFolder);
+            }
+            return syncFolder;
+        }
+
+        private void SyncFolderRecurse(FolderModel masterFolders, FolderModel slaveFolders, FolderModel syncFolderModel)
+        {
+            foreach (var masterFolder in masterFolders.Folders)
+            {
+                if (slaveFolders != null)
+                {
+                    var sameSlaveFolder = slaveFolders.Folders.FirstOrDefault(c => c.Name.Equals(masterFolder.Name));
+
+                    var syncFolder = syncFolderModel.Folders.FirstOrDefault(c => c.Name.Equals(masterFolder.Name));
+                    if (syncFolder == null)
+                    {
+                        syncFolder = CreateSyncFolder(masterFolder, sameSlaveFolder);
+                        syncFolderModel.Folders.Add(syncFolder);
+                    }
+
+                    foreach (var patchFolderFile in masterFolder.Files)
+                    {
+                        var sameMainFile = slaveFolders.Files.FirstOrDefault(c => c.Name.Equals(masterFolder.Name));
+                        var syncFileInfo = CreateSyncFile(patchFolderFile, sameMainFile);
+                        syncFolder.Files.Add(syncFileInfo);
+                    }
+
+                    SyncFolderRecurse(masterFolder, sameSlaveFolder, syncFolder);
+                }
+                else
+                {
+                    masterFolder.ModifyType = ModifyType.Deleted;
+                    var syncFolder = syncFolderModel.Folders.FirstOrDefault(c => c.Name.Equals(masterFolder.Name));
+                    if (syncFolder == null)
+                    {
+                        syncFolder = new FolderModel { Name = masterFolder.Name, ModifyType = masterFolder.ModifyType, Path = masterFolder.Path };
+                        syncFolderModel.Folders.Add(syncFolder);
+                    }
+
+                    foreach (var patchFolderFile in masterFolder.Files)
+                    {
+                        syncFolder.Files.Add(new FileModel(){Name = patchFolderFile.Name, ModifyType = ModifyType.Deleted});
+                    }
+
+                    SyncFolderRecurse(masterFolder, null, syncFolder);
+                }
+            }
+        }
+
+        private FolderModel CreateSyncFolder(FolderModel masterFolder, FolderModel slaveFolder)
+        {
+            if (slaveFolder != null)
+            {
+                return new FolderModel{Name = slaveFolder.Name, ModifyType = slaveFolder.ModifyType, Path = slaveFolder.Path};
+            }
+            else
+            {
+                masterFolder.ModifyType = ModifyType.Deleted;
+                return new FolderModel { Name = masterFolder.Name, ModifyType = masterFolder.ModifyType, Path = masterFolder.Path };
+            }
+        }
+
+        private FileModel CreateSyncFile(FileModel masterFile, FileModel slaveFile)
+        {
+            if (slaveFile != null)
+            {
+                slaveFile.Sync = true;
+                return new FileModel { Name = slaveFile.Name, ModifyType = slaveFile.ModifyType, Path = slaveFile.Path };
+            }
+            else
+            {
+                masterFile.ModifyType = ModifyType.Deleted;
+                return new FileModel { Name = masterFile.Name, ModifyType = masterFile.ModifyType, Path = masterFile.Path };
+            }
+        }
+
+        private UpdateInfoModel DeserializeUpdateInfo(string patchInfoPath)
+        {
+            var serializer = new XmlSerializer(typeof(UpdateInfoModel));
+            using (var reader = new StreamReader(File.OpenRead(patchInfoPath)))
+            {
+                return (UpdateInfoModel)serializer.Deserialize(reader);
+            }
         }
     }
 }
