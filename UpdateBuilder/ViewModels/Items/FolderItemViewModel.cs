@@ -94,6 +94,8 @@ namespace UpdateBuilder.ViewModels.Items
             Childrens = new ObservableCollection<ItemViewModel>();
             Childrens.AddRange(Folders);
             Childrens.AddRange(Files);
+            CheckHash = true;
+            QuickUpdate = true;
         }
 
         public int GetCount()

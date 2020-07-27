@@ -108,7 +108,7 @@ namespace UpdateBuilder.ViewModels
            
             Logger.Instance.Add("Ready to work");
             PatchPath = @"D:\123\123";
-            //OutPath = @"D:\BuilderTest\Out";
+            OutPath = @"D:\BuilderTest\Out";
         }
         private async void LoadInfoAsync()
         {
