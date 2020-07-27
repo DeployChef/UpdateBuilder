@@ -57,6 +57,7 @@ namespace UpdateBuilder.ViewModels.Items
                 Size = Size,
                 Hash = Hash,
                 QuickUpdate = QuickUpdate,
+                CheckHash = CheckHash,
                 FullPath = FullPath,
                 Path = Path
             };
