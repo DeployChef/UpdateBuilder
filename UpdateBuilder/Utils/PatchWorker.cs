@@ -173,63 +173,100 @@ namespace UpdateBuilder.Utils
                 var patchInfo = DeserializeUpdateInfo(patchInfoPath);
                 Logger.Instance.Add($"Данные о прошлом патче получены");
 
-                var syncFolder = SyncFolder(patchInfo.Folder, mainFolder);
+                var syncFolder = SyncFolder(patchInfo.Folder, mainFolder, token);
+                if (syncFolder == null)
+                {
+                    return mainFolder;
+                }
 
-
+                Logger.Instance.Add("Патч синхронизирован");
                 return syncFolder;
 
             }, token);
         }
 
-        private FolderModel SyncFolder(FolderModel patchInfoFolder, FolderModel mainFolder)
+        private FolderModel SyncFolder(FolderModel patchInfoFolder, FolderModel mainFolder, CancellationToken token)
         {
             FolderModel syncFolder;
             if (patchInfoFolder.Name.Equals(mainFolder.Name))
             {
                 syncFolder = new FolderModel { Name = mainFolder.Name, ModifyType = mainFolder.ModifyType, Path = mainFolder.Path };
-                SyncFolderRecurse(patchInfoFolder, mainFolder, syncFolder);
-                SyncFolderRecurse(mainFolder, patchInfoFolder, syncFolder);
+                Logger.Instance.Add($"Синхронизация собранного ранее патча с новым...");
+                SyncFolderRecurse(patchInfoFolder, mainFolder, syncFolder, true);
+                token.ThrowIfCancellationRequested();
+                Logger.Instance.Add($"Синхронизировано");
+
+                Logger.Instance.Add($"Синхронизация нового патча с собраным ранее...");
+                SyncFolderRecurse(mainFolder, patchInfoFolder, syncFolder, false);
+                token.ThrowIfCancellationRequested();
+                Logger.Instance.Add($"Синхронизировано");
+
+                SyncFiles(patchInfoFolder, mainFolder, syncFolder, false);
+                token.ThrowIfCancellationRequested();
+
+                SyncFiles(mainFolder, patchInfoFolder, syncFolder, true);
+                token.ThrowIfCancellationRequested();
+
+                return syncFolder;
             }
             else
             {
-                syncFolder = new FolderModel { Name = "UpdateDiff" };
-                var syncPatchFolder = new FolderModel {Name = patchInfoFolder.Name, ModifyType = ModifyType.Deleted, Path = patchInfoFolder.Path};
-                var syncMainFolder = new FolderModel {Name = mainFolder.Name, ModifyType = mainFolder.ModifyType, Path = mainFolder.Path};
-                syncFolder.Folders.Add(syncPatchFolder);
-                syncFolder.Folders.Add(syncMainFolder);
-                SyncFolderRecurse(patchInfoFolder, null, syncPatchFolder);
-                SyncFolderRecurse(mainFolder, patchInfoFolder, syncMainFolder);
+                Logger.Instance.Add($"Папки для синхронизации не совпадают");
+                return null;
+                //syncFolder = new FolderModel { Name = "UpdateDiff" };
+                //var syncPatchFolder = new FolderModel {Name = patchInfoFolder.Name, ModifyType = ModifyType.Deleted, Path = patchInfoFolder.Path};
+                //var syncMainFolder = new FolderModel {Name = mainFolder.Name, ModifyType = mainFolder.ModifyType, Path = mainFolder.Path};
+                //syncFolder.Folders.Add(syncPatchFolder);
+                //syncFolder.Folders.Add(syncMainFolder);
+                //SyncFolderRecurse(patchInfoFolder, null, syncPatchFolder,true);
+                //SyncFolderRecurse(mainFolder, null, syncMainFolder, false);
+
+
+
+                //SyncFiles(patchInfoFolder, mainFolder, syncPatchFolder, false);
+                //SyncFiles(mainFolder, patchInfoFolder, syncPatchFolder, true);
+
+                //SyncFiles(patchInfoFolder, mainFolder, syncMainFolder, false);
+                //SyncFiles(mainFolder, patchInfoFolder, syncMainFolder, true);
             }
+
+     
+
             return syncFolder;
         }
 
-        private void SyncFolderRecurse(FolderModel masterFolders, FolderModel slaveFolders, FolderModel syncFolderModel)
+        private void SyncFolderRecurse(FolderModel masterFolders, FolderModel slaveFolders, FolderModel syncFolderModel, bool reverse)
         {
             foreach (var masterFolder in masterFolders.Folders)
             {
+                Logger.Instance.Add($"Синхронизация папки {masterFolder.Name}");
+
                 if (slaveFolders != null)
                 {
+
+                    Logger.Instance.Add($"Поиск зависимой папки {masterFolder.Name}");
                     var sameSlaveFolder = slaveFolders.Folders.FirstOrDefault(c => c.Name.Equals(masterFolder.Name));
 
                     var syncFolder = syncFolderModel.Folders.FirstOrDefault(c => c.Name.Equals(masterFolder.Name));
                     if (syncFolder == null)
                     {
+                        Logger.Instance.Add($"Создаем папку синхронизации {masterFolder.Name}");
                         syncFolder = CreateSyncFolder(masterFolder, sameSlaveFolder);
                         syncFolderModel.Folders.Add(syncFolder);
                     }
-
-                    foreach (var patchFolderFile in masterFolder.Files)
+                    else
                     {
-                        var sameMainFile = slaveFolders.Files.FirstOrDefault(c => c.Name.Equals(masterFolder.Name));
-                        var syncFileInfo = CreateSyncFile(patchFolderFile, sameMainFile);
-                        syncFolder.Files.Add(syncFileInfo);
+                        Logger.Instance.Add($"Папка синхронизации присутствует {masterFolder.Name}");
                     }
 
-                    SyncFolderRecurse(masterFolder, sameSlaveFolder, syncFolder);
+                    Logger.Instance.Add($"Синхронизации файлов для {masterFolder.Name}");
+                    SyncFiles(masterFolder, sameSlaveFolder, syncFolder, reverse);
+
+                    SyncFolderRecurse(masterFolder, sameSlaveFolder, syncFolder, reverse);
                 }
                 else
                 {
-                    masterFolder.ModifyType = ModifyType.Deleted;
+                    Logger.Instance.Add($"Зависимой папки нет {masterFolder.Name}");
                     var syncFolder = syncFolderModel.Folders.FirstOrDefault(c => c.Name.Equals(masterFolder.Name));
                     if (syncFolder == null)
                     {
@@ -237,12 +274,34 @@ namespace UpdateBuilder.Utils
                         syncFolderModel.Folders.Add(syncFolder);
                     }
 
-                    foreach (var patchFolderFile in masterFolder.Files)
+                    foreach (var masterFile in masterFolder.Files)
                     {
-                        syncFolder.Files.Add(new FileModel(){Name = patchFolderFile.Name, ModifyType = ModifyType.Deleted});
+                        var modifyType = reverse ? ModifyType.Deleted : ModifyType.New;
+                        Logger.Instance.Add($"Устанавливаем тип {modifyType} для {masterFile.Name}");
+                        syncFolder.Files.Add(new FileModel(){Name = masterFile.Name, ModifyType = modifyType});
                     }
 
-                    SyncFolderRecurse(masterFolder, null, syncFolder);
+                    SyncFolderRecurse(masterFolder, null, syncFolder, reverse);
+                }
+            }
+        }
+
+        private void SyncFiles(FolderModel masterFolder, FolderModel sameSlaveFolder, FolderModel syncFolder, bool reverse)
+        {
+            foreach (var masterFile in masterFolder.Files)
+            {
+                Logger.Instance.Add($"Синхронизируем файл {masterFile.Name}");
+                var sameMainFile = sameSlaveFolder?.Files.FirstOrDefault(c => c.Name.Equals(masterFile.Name));
+                var syncFile = syncFolder.Files.FirstOrDefault(c => c.Name.Equals(masterFile.Name));
+                if (syncFile == null)
+                {
+                    var syncFileInfo = CreateSyncFile(masterFile, sameMainFile, reverse);
+                    syncFolder.Files.Add(syncFileInfo);
+                    Logger.Instance.Add($"Создаем файл синхронизации {masterFile.Name}");
+                }
+                else
+                {
+                    Logger.Instance.Add($"Файл синхронизации присутствует {masterFile.Name}");
                 }
             }
         }
@@ -251,26 +310,38 @@ namespace UpdateBuilder.Utils
         {
             if (slaveFolder != null)
             {
+                Logger.Instance.Add($"Зависимая папка найдена {masterFolder.Name}");
                 return new FolderModel{Name = slaveFolder.Name, ModifyType = slaveFolder.ModifyType, Path = slaveFolder.Path};
             }
             else
             {
-                masterFolder.ModifyType = ModifyType.Deleted;
+                Logger.Instance.Add($"Зависимой папки нет {masterFolder.Name}");
                 return new FolderModel { Name = masterFolder.Name, ModifyType = masterFolder.ModifyType, Path = masterFolder.Path };
             }
         }
 
-        private FileModel CreateSyncFile(FileModel masterFile, FileModel slaveFile)
+        private FileModel CreateSyncFile(FileModel masterFile, FileModel slaveFile, bool reverse)
         {
             if (slaveFile != null)
             {
-                slaveFile.Sync = true;
-                return new FileModel { Name = slaveFile.Name, ModifyType = slaveFile.ModifyType, Path = slaveFile.Path };
+                Logger.Instance.Add($"Зависимый файл найден {slaveFile.Name}");
+                var syncFile = new FileModel {Name = slaveFile.Name, Path = slaveFile.Path, CheckHash = masterFile.CheckHash, QuickUpdate = masterFile.QuickUpdate};
+                if (slaveFile.Hash == masterFile.Hash)
+                {
+                    syncFile.ModifyType = ModifyType.NotModified;
+                }
+                if (slaveFile.Hash != masterFile.Hash)
+                {
+                    syncFile.ModifyType = ModifyType.Modified;
+                }
+                return syncFile;
             }
             else
             {
-                masterFile.ModifyType = ModifyType.Deleted;
-                return new FileModel { Name = masterFile.Name, ModifyType = masterFile.ModifyType, Path = masterFile.Path };
+                Logger.Instance.Add($"Зависимого файла нет {masterFile.Name}");
+                var type = reverse ? ModifyType.Deleted : ModifyType.New;
+                Logger.Instance.Add($"Устанавливаем тип {type} для {masterFile.Name}");
+                return new FileModel { Name = masterFile.Name, ModifyType = type, Path = masterFile.Path };
             }
         }
 

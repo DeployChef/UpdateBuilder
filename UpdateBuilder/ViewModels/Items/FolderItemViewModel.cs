@@ -101,8 +101,10 @@ namespace UpdateBuilder.ViewModels.Items
             Childrens = new ObservableCollection<ItemViewModel>();
             Childrens.AddRange(Folders);
             Childrens.AddRange(Files);
-            CheckHash = GetCheckHashRecurse(this);
-            QuickUpdate = GetQuickUpdateRecurse(this);
+            _checkHash = GetCheckHashRecurse(this);
+            RaisePropertyChanged(nameof(CheckHash));
+            _quickUpdate = GetQuickUpdateRecurse(this);
+            RaisePropertyChanged(nameof(QuickUpdate));
             ModifyType = GetModifyType(this);
         }
 

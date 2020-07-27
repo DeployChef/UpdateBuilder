@@ -187,8 +187,6 @@ namespace UpdateBuilder.ViewModels
                     var syncFolder = await _patchWorker.SyncUpdateInfoAsync(_mainFolder, patchInfoPath, token);
 
                     CreateSyncFolder(syncFolder);
-
-                    Logger.Instance.Add("Патч синхронизирован");
                 }
                 else
                 {
