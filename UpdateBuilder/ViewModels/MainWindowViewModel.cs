@@ -232,12 +232,17 @@ namespace UpdateBuilder.ViewModels
             var rootFolder = SyncFolder.FirstOrDefault();
             if (rootFolder != null)
             {
-                var updateInfo = new UpdateInfoModel()
+                var updateInfoAll = new UpdateInfoModel()
                 {
                     Folder = rootFolder.ToModel(),
                 };
 
-                var result = await _patchWorker.BuildUpdateAsync(updateInfo, OutPath, token);
+                var updateInfo = new UpdateInfoModel()
+                {
+                    Folder = rootFolder.ToUnDeletedModel(),
+                };
+
+                var result = await _patchWorker.BuildUpdateAsync(updateInfoAll, updateInfo, OutPath, token);
 
                 if (!token.IsCancellationRequested && result)
                 {

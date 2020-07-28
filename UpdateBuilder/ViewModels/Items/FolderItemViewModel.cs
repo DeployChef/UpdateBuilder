@@ -171,9 +171,28 @@ namespace UpdateBuilder.ViewModels.Items
             return folderModel;
         }
 
+        private FolderModel GetFolderUnDeletedRecurce(FolderItemViewModel rootFolder)
+        {
+            var folderModel = new FolderModel { Name = rootFolder.Name };
+            foreach (var folder in rootFolder.Folders.Where(c => c.ModifyType != ModifyType.Deleted))
+            {
+                folderModel.Folders.Add(GetFolderUnDeletedRecurce(folder));
+            }
+            foreach (var file in rootFolder.Files.Where(c => c.ModifyType != ModifyType.Deleted))
+            {
+                folderModel.Files.Add(file.ToModel());
+            }
+            return folderModel;
+        }
+
         public FolderModel ToModel()
         {
             return GetFolderRecurce(this);
+        }
+
+        public FolderModel ToUnDeletedModel()
+        {
+            return GetFolderUnDeletedRecurce(this);
         }
     }
 }

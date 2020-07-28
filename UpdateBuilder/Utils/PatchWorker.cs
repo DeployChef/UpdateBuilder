@@ -80,7 +80,7 @@ namespace UpdateBuilder.Utils
         }
 
 
-        public async Task<bool> BuildUpdateAsync(UpdateInfoModel updateInfo, string outPath, CancellationToken token)
+        public async Task<bool> BuildUpdateAsync(UpdateInfoModel updateInfoAll, UpdateInfoModel updateInfo, string outPath, CancellationToken token)
         {
             return await Task.Run(() => {
                 try
@@ -94,7 +94,7 @@ namespace UpdateBuilder.Utils
 
                     Logger.Instance.Add("Начинаем паковать");
 
-                    PuckingRecurse(updateInfo.Folder, $"{outPath}\\{updateInfo.Folder.Name}", token);
+                    PuckingRecurse(updateInfoAll.Folder, $"{outPath}\\{updateInfoAll.Folder.Name}", token);
 
                     Logger.Instance.Add("Все запаковано");
                     return true;
@@ -113,19 +113,40 @@ namespace UpdateBuilder.Utils
            
             foreach (var folder in rootFolder.Folders)
             {
-                var folderPath = $"{outPath}\\{folder.Name}";
+                var folderPath = Path.Combine(outPath, folder.Name);
 
-                if (!Directory.Exists(folderPath))
+                if (Directory.Exists(folderPath) && folder.ModifyType == ModifyType.Deleted)
+                {
+                    Directory.Delete(folderPath, true);
+                }
+                else
+                {
                     Directory.CreateDirectory(folderPath);
+                }
 
                 PuckingRecurse(folder, folderPath, token);
             }
 
-            foreach (var file in rootFolder.Files)
+            foreach (var file in rootFolder.Files.Where(c => c.ModifyType == ModifyType.Deleted))
+            {
+                var filePath = Path.Combine(outPath, file.Name + ".zip");
+
+                Logger.Instance.Add($"Удаляем {filePath}");
+
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+            }
+
+            foreach (var file in rootFolder.Files.Where(c => c.ModifyType == ModifyType.NotModified))
+            {
+                Logger.Instance.Add($"Ничего не делаем с {file.FullPath}");
+            }
+
+            foreach (var file in rootFolder.Files.Where(c => c.ModifyType == ModifyType.Modified || c.ModifyType == ModifyType.New))
             { 
                 try
                 {
-                    var filePath = $"{outPath}\\{file.Name}";
+                    var filePath = Path.Combine(outPath, file.Name);
 
                     Logger.Instance.Add($"Проверяем {file.FullPath}");
 
@@ -331,8 +352,8 @@ namespace UpdateBuilder.Utils
                     Path = slaveFile.Path,
                     CheckHash = masterFile.CheckHash, 
                     QuickUpdate = masterFile.QuickUpdate, 
-                    Hash = masterFile.Hash, 
-                    Size = masterFile.Size,
+                    Hash = slaveFile.Hash, 
+                    Size = slaveFile.Size,
                     FullPath = slaveFile.FullPath,
                 };
 
