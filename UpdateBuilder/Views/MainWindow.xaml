@@ -76,7 +76,7 @@
                         <Style TargetType="{x:Type TextBlock}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ElementName=ShowSizeCheckbox, Path=IsChecked}" Value="false">
-                                    <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                    <Setter Property="TextBox.Visibility" Value="Collapsed"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -87,7 +87,7 @@
                         <Style TargetType="{x:Type TextBlock}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ElementName=ShowHashCheckbox, Path=IsChecked}" Value="false">
-                                    <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                    <Setter Property="TextBox.Visibility" Value="Collapsed"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

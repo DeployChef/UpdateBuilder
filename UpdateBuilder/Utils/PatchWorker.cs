@@ -192,12 +192,12 @@ namespace UpdateBuilder.Utils
             {
                 syncFolder = new FolderModel { Name = mainFolder.Name, ModifyType = mainFolder.ModifyType, Path = mainFolder.Path };
                 Logger.Instance.Add($"Синхронизация собранного ранее патча с новым...");
-                SyncFolderRecurse(patchInfoFolder, mainFolder, syncFolder, true);
+                SyncFolderRecurse(patchInfoFolder, mainFolder, syncFolder, false);
                 token.ThrowIfCancellationRequested();
                 Logger.Instance.Add($"Синхронизировано");
 
                 Logger.Instance.Add($"Синхронизация нового патча с собраным ранее...");
-                SyncFolderRecurse(mainFolder, patchInfoFolder, syncFolder, false);
+                SyncFolderRecurse(mainFolder, patchInfoFolder, syncFolder, true);
                 token.ThrowIfCancellationRequested();
                 Logger.Instance.Add($"Синхронизировано");
 
@@ -276,9 +276,9 @@ namespace UpdateBuilder.Utils
 
                     foreach (var masterFile in masterFolder.Files)
                     {
-                        var modifyType = reverse ? ModifyType.Deleted : ModifyType.New;
+                        var modifyType = reverse ? ModifyType.New : ModifyType.Deleted;
                         Logger.Instance.Add($"Устанавливаем тип {modifyType} для {masterFile.Name}");
-                        syncFolder.Files.Add(new FileModel(){Name = masterFile.Name, ModifyType = modifyType});
+                        syncFolder.Files.Add(new FileModel(){Name = masterFile.Name, ModifyType = modifyType, Path = masterFile.Path, Hash = masterFile.Hash, Size = masterFile.Size});
                     }
 
                     SyncFolderRecurse(masterFolder, null, syncFolder, reverse);
@@ -325,7 +325,17 @@ namespace UpdateBuilder.Utils
             if (slaveFile != null)
             {
                 Logger.Instance.Add($"Зависимый файл найден {slaveFile.Name}");
-                var syncFile = new FileModel {Name = slaveFile.Name, Path = slaveFile.Path, CheckHash = masterFile.CheckHash, QuickUpdate = masterFile.QuickUpdate};
+               
+                var syncFile = new FileModel {
+                    Name = slaveFile.Name, 
+                    Path = slaveFile.Path,
+                    CheckHash = masterFile.CheckHash, 
+                    QuickUpdate = masterFile.QuickUpdate, 
+                    Hash = masterFile.Hash, 
+                    Size = masterFile.Size,
+                    FullPath = slaveFile.FullPath,
+                };
+
                 if (slaveFile.Hash == masterFile.Hash)
                 {
                     syncFile.ModifyType = ModifyType.NotModified;
@@ -339,9 +349,19 @@ namespace UpdateBuilder.Utils
             else
             {
                 Logger.Instance.Add($"Зависимого файла нет {masterFile.Name}");
-                var type = reverse ? ModifyType.Deleted : ModifyType.New;
+                var type = reverse ? ModifyType.New : ModifyType.Deleted;
                 Logger.Instance.Add($"Устанавливаем тип {type} для {masterFile.Name}");
-                return new FileModel { Name = masterFile.Name, ModifyType = type, Path = masterFile.Path };
+                return new FileModel
+                {
+                    Name = masterFile.Name, 
+                    ModifyType = type, 
+                    Path = masterFile.Path, 
+                    FullPath = masterFile.FullPath,
+                    Hash = masterFile.Hash, 
+                    Size = masterFile.Size,
+                    CheckHash = true,
+                    QuickUpdate = true,
+                };
             }
         }
 

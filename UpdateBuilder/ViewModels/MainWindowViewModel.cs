@@ -126,7 +126,7 @@ namespace UpdateBuilder.ViewModels
             SetOutPathCommand = new RelayCommand(o => { OutPath = GetPath(); }, can => !InBuilding);
             GoToSiteCommand = new RelayCommand(o => { Process.Start(@"http:\\upnova.ru"); });
             ClearLogCommand = new RelayCommand(o => { Logger.Instance.Clear(); });
-            SyncCommand = new RelayCommand(o => { SyncInfoAsync(); }, can => !IsBusy && CanSync);
+            SyncCommand = new RelayCommand(o => { LoadInfoAsync(); }, can => !IsBusy && CanSync);
             BuildUpdateCommand = new RelayCommand(o => BuildUpdateAsync(), can => !IsBusy && !string.IsNullOrWhiteSpace(PatchPath) && !string.IsNullOrWhiteSpace(OutPath));
            
             Logger.Instance.Add("Ready to work");
