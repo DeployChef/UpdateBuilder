@@ -204,7 +204,7 @@
 
                         <Grid>
 
-                         
+
 
                             <Border
                             x:Name="PART_Border"
@@ -513,6 +513,29 @@
                         <ImageBrush ImageSource="/UpdateBuilder;component/Resource/CheckHash_Off.png" Stretch="UniformToFill"/>
                     </Setter.Value>
                 </Setter>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <ControlTemplate x:Key="SyncButtonControlTemplate" TargetType="{x:Type Button}">
+        <Grid x:Name="grid">
+            <Border x:Name="border" BorderBrush="#0C000000" BorderThickness="1" CornerRadius="10" >
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="1"/>
+                </Border.Effect>
+            </Border>
+            <Rectangle Margin="10">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="/UpdateBuilder;component/Resource/syncButton.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
+
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" TargetName="grid" Value="0.5"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" TargetName="border" Value="#FF94BCFF"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

@@ -234,7 +234,7 @@
                 </Grid>
 
                 <Grid Grid.Column="1" Grid.Row="1">
-                    <Button Command="{Binding SyncCommand}" Content="🔁"></Button>
+                    <Button Command="{Binding SyncCommand}" Content="🔁" Template="{DynamicResource SyncButtonControlTemplate}" Width="44" Height="44" Cursor="Hand"></Button>
                 </Grid>
 
                 <Grid Grid.Row="1" Grid.Column="2">

@@ -211,5 +211,11 @@
   <ItemGroup>
     <Resource Include="Resource\Critical_off.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Sync.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\syncButton.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
