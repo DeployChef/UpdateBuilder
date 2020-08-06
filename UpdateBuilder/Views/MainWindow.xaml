@@ -14,7 +14,7 @@
         Title="UpdateBuilder" Height="852" Width="834"
         Background="White" 
         MinHeight="800" MinWidth="820"
-        WindowStartupLocation="CenterScreen" Style="{DynamicResource MainWindowStyle}">
+        WindowStartupLocation="CenterScreen" Style="{DynamicResource MainWindowStyle}" Icon="/UpdateBuilder;component/Фигура.ico">
     <Window.Resources>
         
         <HierarchicalDataTemplate DataType="{x:Type items:FolderItemViewModel}" ItemsSource="{Binding Childrens}">
