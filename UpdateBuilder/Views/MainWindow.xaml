@@ -8,6 +8,7 @@
         xmlns:controls="clr-namespace:UpdateBuilder.Controls"
         xmlns:utils="clr-namespace:UpdateBuilder.Utils"
         xmlns:views="clr-namespace:UpdateBuilder.Views"
+        xmlns:models="clr-namespace:UpdateBuilder.Models"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Title="UpdateBuilder" Height="852" Width="834"
@@ -23,23 +24,59 @@
 
                 <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0"  Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
 
-                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
+                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.New}">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Deleted}">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Modified}">
+                                    <Setter Property="Foreground" Value="Blue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </StackPanel>
         </HierarchicalDataTemplate>
 
-        <DataTemplate DataType="{x:Type items:FileItemViewModel}">
+        <HierarchicalDataTemplate DataType="{x:Type items:FileItemViewModel}" ItemsSource="{Binding FileUpdates}">
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
 
                 <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
 
-                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14"/>
+                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.New}">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Deleted}">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Modified}">
+                                    <Setter Property="Foreground" Value="Blue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
                 <TextBlock Text="{Binding Size}" Margin="5,0,0,0" FontSize="14">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ElementName=ShowSizeCheckbox, Path=IsChecked}" Value="false">
-                                    <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                    <Setter Property="TextBox.Visibility" Value="Collapsed"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -50,14 +87,14 @@
                         <Style TargetType="{x:Type TextBlock}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ElementName=ShowHashCheckbox, Path=IsChecked}" Value="false">
-                                    <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                    <Setter Property="TextBox.Visibility" Value="Collapsed"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
             </StackPanel>
-        </DataTemplate>
+        </HierarchicalDataTemplate>
 
     
 
@@ -118,7 +155,7 @@
 
             <Grid x:Name="HeaderPanel" Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
-                    <Button Command="{Binding GoToSiteCommand}" Width="170.75" Template="{DynamicResource UpNovaLinkStyle}" Margin="0,3.333,0,6.75">
+                    <Button Command="{Binding GoToSiteCommand}" Cursor="Hand" Width="170.75" Template="{DynamicResource UpNovaLinkStyle}" Margin="0,3.333,0,6.75">
                         <Button.Background>
                             <ImageBrush ImageSource="/UpdateBuilder;component/Resource/LogoUpNova.png"/>
                         </Button.Background>
@@ -150,12 +187,13 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="59*"/>
-                    <ColumnDefinition Width="69*"/>
+                    <ColumnDefinition Width="65*"/>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="65*"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="01. Загрузите файлы патча" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
-                <TextBlock Grid.Column="1" Text="02. Куда будем сохранять патч для апдейтера ?" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
+                <TextBlock Grid.Column="2" Text="02. Куда будем сохранять патч для апдейтера ?" VerticalAlignment="Center" Margin="10,11.6" FontSize="14" Height="16.8"/>
 
                 <Grid Grid.Row="1" Grid.Column="0">
 
@@ -174,9 +212,11 @@
                     </Grid>
 
                     <TextBlock Margin="62,11,30,5"  FontSize="14" TextWrapping="Wrap">
-                            <Run Text="Переместите сюда папку с патчем или" Foreground="#FF80A9F0"/>
-                            <Run Text="нажмите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>      
-                            <Run Text="чтобы выбрать вручную" Foreground="#FF80A9F0"/>
+                        <Run Text="Перетащите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>    
+                        <Run Text="или" Foreground="#FF80A9F0"/>
+                        <Run Text="нажмите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>    
+                        <Run Text="чтобы выбрать папку с файлами для патча" Foreground="#FF80A9F0"/>
+                        
 
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
@@ -190,10 +230,54 @@
                             </TextBlock.Style>
                     </TextBlock>
 
-                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetPatchPathCommand}" Margin="10,5,30,5" AllowDrop="True" Drop="Button_Drop" Cursor="Hand"/>
+                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetPatchPathCommand}" Margin="10,5" AllowDrop="True" Drop="Button_Drop" Cursor="Hand"/>
                 </Grid>
 
-                <Grid Grid.Row="1" Grid.Column="1">
+                <Grid Grid.Column="1" Grid.Row="1">
+                    <Button Command="{Binding SyncCommand}" Content="🔁" Template="{DynamicResource SyncButtonControlTemplate}" Width="44" Height="44" Cursor="Hand"></Button>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.Column="2">
+
+                    <Grid  Margin="62,21,53,19">
+                        <TextBlock x:Name="OutPath" Text="{Binding OutPath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="#FF94BCFF" FontSize="14" TextTrimming="CharacterEllipsis"/>
+                        <Rectangle  Fill="#FF94BCFF" Margin="0,16,0,3.333"/>
+                        <Grid.Style>
+                            <Style TargetType="{x:Type Grid}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=OutPath, Path=Text}" Value="">
+                                        <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                    </Grid>
+
+                    <TextBlock Margin="62,11,21,5"  FontSize="14" TextWrapping="Wrap">
+                        <Run Text="Перетащите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>    
+                        <Run Text="или" Foreground="#FF80A9F0"/>
+                        <Run Text="нажмите" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>       
+                        <Run Text="чтобы выбрать" Foreground="#FF80A9F0"/>
+                        <Run Text="пустую папку" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>   
+                        <Run Text="или уже" Foreground="#FF80A9F0"/>
+                        <Run Text="собраный патч" FontWeight="SemiBold" Foreground="#FF4F8CF3"/>
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextBox.Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=OutPath, Path=Text}" Value="">
+                                        <Setter Property="TextBox.Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <Button Template="{DynamicResource DropSelectFolderButton}" Command="{Binding SetOutPathCommand}" Margin="10,5" AllowDrop="True" Drop="ButtonOut_Drop" Cursor="Hand"/>
+                </Grid>
+
+
+                <!--<Grid Grid.Row="1" Grid.Column="1">
                     <Rectangle Fill="#FF94BCFF" Width="24" Height="24" Margin="15.146,12.271,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Rectangle.OpacityMask>
                             <ImageBrush ImageSource="/UpdateBuilder;component/Resource/minFolder.png"/>
@@ -205,7 +289,7 @@
 
                     <Rectangle Margin="57.984,41.333,131.73,0" Fill="#FF94BCFF" Height="1" VerticalAlignment="Top"/>
                     <Button Content="Выбрать" Command="{Binding SetOutPathCommand}" Height="36.312" Margin="0,7.146,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="117" FontSize="14" Style="{DynamicResource RegularButton}" Foreground="White"/>
-                </Grid>
+                </Grid>-->
 
             </Grid>
 
@@ -242,7 +326,7 @@
                         </Grid.RowDefinitions>
 
                     <Border BorderBrush="#FFECE9F1" BorderThickness="1" CornerRadius="10">
-                        <TreeView Style="{DynamicResource TreeViewStyle}" Grid.Row="0" Margin="5" ItemsSource="{Binding MainFolder}" HorizontalContentAlignment="Center">
+                        <TreeView Style="{DynamicResource TreeViewStyle}" Grid.Row="0" Margin="5" ItemsSource="{Binding SyncFolder}" HorizontalContentAlignment="Center">
                             <TreeView.ItemContainerStyle>
                                 <Style TargetType="{x:Type TreeViewItem}">
                                     <Setter Property="IsExpanded" Value="True"/>

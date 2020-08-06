@@ -1,10 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Input;
 using UpdateBuilder.Models;
+using UpdateBuilder.Properties;
 using UpdateBuilder.Utils;
 using UpdateBuilder.ViewModels.Base;
 using UpdateBuilder.ViewModels.Items;
@@ -20,15 +23,18 @@ namespace UpdateBuilder.ViewModels
         private string _totalSize = ((long)0).BytesToString();
         private int _totalCount;
         private int _progressValue;
-        private ObservableCollection<FolderItemViewModel> _mainFolder = new ObservableCollection<FolderItemViewModel>();
+        private FolderModel _mainFolder;
+        private ObservableCollection<FolderItemViewModel> _syncFolder = new ObservableCollection<FolderItemViewModel>();
         private readonly PatchWorker _patchWorker;
         private CancellationTokenSource _cts;
 
-        public RelayCommand SetPatchPathCommand { get; set; } 
-        public RelayCommand SetOutPathCommand { get; set; }
-        public RelayCommand GoToSiteCommand { get; set; }
-        public RelayCommand ClearLogCommand { get; set; }
-        public RelayCommand BuildUpdateCommand { get; set; }
+        public ICommand SetPatchPathCommand { get; set; } 
+        public ICommand SetOutPathCommand { get; set; }
+        public ICommand GoToSiteCommand { get; set; }
+        public ICommand ClearLogCommand { get; set; }
+        public ICommand BuildUpdateCommand { get; set; }
+
+        public ICommand SyncCommand { get; set; }
 
         public bool IsRoot
         {
@@ -41,20 +47,34 @@ namespace UpdateBuilder.ViewModels
             get => _pathPath;
             set
             {
-                SetProperty(ref _pathPath, value);
-                LoadInfoAsync();
+                if (SetProperty(ref _pathPath, value))
+                {
+                    Settings.Default.PatchPath = value;
+                    Settings.Default.Save();
+                    LoadInfoAsync();
+                }
+                   
             }
         }
         public string OutPath
         {
             get => _outPath;
-            set => SetProperty(ref _outPath, value);
+            set
+            {
+                if (SetProperty(ref _outPath, value))
+                {
+                    Settings.Default.OutPath = value;
+                    Settings.Default.Save();
+                    SyncInfoAsync();
+                }
+                 
+            }
         }
 
-        public ObservableCollection<FolderItemViewModel> MainFolder
+        public ObservableCollection<FolderItemViewModel> SyncFolder
         {
-            get => _mainFolder;
-            set => SetProperty(ref _mainFolder, value);
+            get => _syncFolder;
+            set => SetProperty(ref _syncFolder, value);
         }
 
         public string TotalSize
@@ -96,6 +116,8 @@ namespace UpdateBuilder.ViewModels
         }
 
 
+        public bool CanSync => !string.IsNullOrEmpty(PatchPath) && !string.IsNullOrEmpty(OutPath) && _mainFolder != null;
+
         public MainWindowViewModel()
         {
             _patchWorker = new PatchWorker();
@@ -104,11 +126,12 @@ namespace UpdateBuilder.ViewModels
             SetOutPathCommand = new RelayCommand(o => { OutPath = GetPath(); }, can => !InBuilding);
             GoToSiteCommand = new RelayCommand(o => { Process.Start(@"http:\\upnova.ru"); });
             ClearLogCommand = new RelayCommand(o => { Logger.Instance.Clear(); });
+            SyncCommand = new RelayCommand(o => { LoadInfoAsync(); }, can => !IsBusy && CanSync);
             BuildUpdateCommand = new RelayCommand(o => BuildUpdateAsync(), can => !IsBusy && !string.IsNullOrWhiteSpace(PatchPath) && !string.IsNullOrWhiteSpace(OutPath));
            
             Logger.Instance.Add("Ready to work");
-            PatchPath = @"D:\123\123";
-            OutPath = @"D:\BuilderTest\Out";
+            PatchPath = Settings.Default.PatchPath;
+            OutPath = Settings.Default.OutPath;
         }
         private async void LoadInfoAsync()
         {
@@ -118,28 +141,81 @@ namespace UpdateBuilder.ViewModels
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
 
-            MainFolder.Clear();
+            _mainFolder = null;
             TotalCount = 0;
             TotalSize = "0";
             ProgressValue = 0;
             Logger.Instance.Clear();
 
-            var rootF = await _patchWorker.GetFolderInfoAsync(PatchPath, token);
+            _mainFolder = await _patchWorker.GetFolderInfoAsync(PatchPath, token);
 
-            if (rootF != null)
+            if (_mainFolder != null)
             {
-                var rootFolder = new FolderItemViewModel(rootF);
-                TotalCount = rootFolder.GetCount();
-                TotalSize = rootFolder.GetSize().BytesToString();
-                MainFolder.Add(rootFolder);
-                ProgressValue = TotalCount;
+                CreateSyncFolder(_mainFolder);
+            }
+          
+
+            IsBusy = false;
+            var cancel = _cts.IsCancellationRequested;
+            _cts = null;
+
+            CommandManager.InvalidateRequerySuggested();
+
+            if (!cancel)
+                SyncInfoAsync();
+        }
+
+
+        private async void SyncInfoAsync()
+        {
+            if(!CanSync || IsBusy)
+                return;
+
+            IsBusy = true;
+
+            _cts?.Cancel(true);
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
+
+            try
+            {
+                Logger.Instance.Add("Начинаем синхронизацию...");
+
+                var patchInfoPath = Path.Combine(OutPath, "UpdateInfo.xml");
+                if (File.Exists(patchInfoPath))
+                {
+                    var syncFolder = await _patchWorker.SyncUpdateInfoAsync(_mainFolder, patchInfoPath, token);
+
+                    CreateSyncFolder(syncFolder);
+                }
+                else
+                {
+                    Logger.Instance.Add("Файлов предыдущего патча не найдено");
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Instance.Add("Во время синхронизации произошла ошибка");
+                Logger.Instance.Add(e.Message);
             }
 
+            Logger.Instance.Add("Конец синхронизации");
             IsBusy = false;
             _cts = null;
 
             CommandManager.InvalidateRequerySuggested();
         }
+
+        private void CreateSyncFolder(FolderModel syncF)
+        {
+            SyncFolder.Clear();
+            var syncFolder = new FolderItemViewModel(syncF);
+            TotalCount = syncFolder.GetCount();
+            TotalSize = syncFolder.GetSize().BytesToString();
+            SyncFolder.Add(syncFolder);
+            ProgressValue = TotalCount;
+        }
+
 
         private async void BuildUpdateAsync()
         {
@@ -153,18 +229,22 @@ namespace UpdateBuilder.ViewModels
             Logger.Instance.Clear();
             ProgressValue = 0;
 
-            var rootFolder = MainFolder.FirstOrDefault();
+            var rootFolder = SyncFolder.FirstOrDefault();
             if (rootFolder != null)
             {
-                var updateInfo = new UpdateInfoModel()
+                var updateInfoAll = new UpdateInfoModel()
                 {
                     Folder = rootFolder.ToModel(),
-                    Version = 1
                 };
 
-                var result = await _patchWorker.BuildUpdateAsync(updateInfo, OutPath, token);
+                var updateInfo = new UpdateInfoModel()
+                {
+                    Folder = rootFolder.ToUnDeletedModel(),
+                };
 
-                if (!token.IsCancellationRequested || result)
+                var result = await _patchWorker.BuildUpdateAsync(updateInfoAll, updateInfo, OutPath, token);
+
+                if (!token.IsCancellationRequested && result)
                 {
                     Logger.Instance.Add("--------------------------------------------");
                     Logger.Instance.Add("--------------ПАТЧ-ГОТОВ!------------");

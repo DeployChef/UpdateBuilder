@@ -60,8 +60,10 @@
     </ApplicationDefinition>
     <Compile Include="Controls\ToggleButonEx.cs" />
     <Compile Include="HashCalc\CRC32.cs" />
+    <Compile Include="Models\ModifyType.cs" />
     <Compile Include="Models\UpdateInfoModel.cs" />
     <Compile Include="Utils\StringHelper.cs" />
+    <Compile Include="ViewModels\Items\FileUpdateItemViewModel.cs" />
     <Compile Include="ZIPLib\Crc32.cs" />
     <Compile Include="ZIPLib\Deflate.cs" />
     <Compile Include="ZIPLib\DeflateStream.cs" />
@@ -208,6 +210,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resource\Critical_off.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Sync.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\syncButton.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

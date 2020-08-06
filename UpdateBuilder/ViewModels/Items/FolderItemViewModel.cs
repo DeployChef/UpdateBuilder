@@ -12,11 +12,18 @@ namespace UpdateBuilder.ViewModels.Items
     {
         private bool _quickUpdate;
         private bool _checkHash;
+        private ModifyType _modifyType;
         private ObservableCollection<FileItemViewModel> _files;
         private ObservableCollection<FolderItemViewModel> _folders;
         private ObservableCollection<ItemViewModel> _childrens;
 
         public bool Updating { get; set; }
+
+        public ModifyType ModifyType
+        {
+            get => _modifyType;
+            set => SetProperty(ref _modifyType, value);
+        }
 
         public ObservableCollection<FileItemViewModel> Files
         {
@@ -94,8 +101,11 @@ namespace UpdateBuilder.ViewModels.Items
             Childrens = new ObservableCollection<ItemViewModel>();
             Childrens.AddRange(Folders);
             Childrens.AddRange(Files);
-            CheckHash = true;
-            QuickUpdate = true;
+            _checkHash = GetCheckHashRecurse(this);
+            RaisePropertyChanged(nameof(CheckHash));
+            _quickUpdate = GetQuickUpdateRecurse(this);
+            RaisePropertyChanged(nameof(QuickUpdate));
+            ModifyType = GetModifyType(this);
         }
 
         public int GetCount()
@@ -106,6 +116,31 @@ namespace UpdateBuilder.ViewModels.Items
         public long GetSize()
         {
            return GetSizeRecurce(this);
+        }
+
+        private ModifyType GetModifyType(FolderItemViewModel rootFolder)
+        {
+            var modifyTypes = GetModifyTypeRecurse(rootFolder);
+            var modyfyGroups = modifyTypes.GroupBy(c => c).ToArray();
+            return modyfyGroups.Length == 1 ? modyfyGroups.First().Key : ModifyType.Modified;
+        }
+        private List<ModifyType> GetModifyTypeRecurse(FolderItemViewModel rootFolder)
+        {
+            var modifyTypes = rootFolder.Folders.SelectMany(GetModifyTypeRecurse).ToList();
+            modifyTypes.AddRange(rootFolder.Files.Select(c => c.ModifyType));
+            return modifyTypes;
+        }
+
+        private bool GetCheckHashRecurse(FolderItemViewModel rootFolder)
+        {
+            var checkHash = rootFolder.Folders.All(GetCheckHashRecurse);
+            return checkHash && rootFolder.Files.All(c => c.CheckHash);
+        }
+
+        private bool GetQuickUpdateRecurse(FolderItemViewModel rootFolder)
+        {
+            var quickUpdate = rootFolder.Folders.All(GetQuickUpdateRecurse);
+            return quickUpdate && rootFolder.Files.All(c => c.QuickUpdate);
         }
 
         private int GetCountRecurce(FolderItemViewModel rootFolder)
@@ -124,7 +159,7 @@ namespace UpdateBuilder.ViewModels.Items
 
         private FolderModel GetFolderRecurce(FolderItemViewModel rootFolder)
         {
-            var folderModel = new FolderModel{Name = rootFolder.Name };
+            var folderModel = new FolderModel{ Name = rootFolder.Name };
             foreach (var folder in rootFolder.Folders)
             {
                 folderModel.Folders.Add(GetFolderRecurce(folder));
@@ -136,9 +171,28 @@ namespace UpdateBuilder.ViewModels.Items
             return folderModel;
         }
 
+        private FolderModel GetFolderUnDeletedRecurce(FolderItemViewModel rootFolder)
+        {
+            var folderModel = new FolderModel { Name = rootFolder.Name };
+            foreach (var folder in rootFolder.Folders.Where(c => c.ModifyType != ModifyType.Deleted))
+            {
+                folderModel.Folders.Add(GetFolderUnDeletedRecurce(folder));
+            }
+            foreach (var file in rootFolder.Files.Where(c => c.ModifyType != ModifyType.Deleted))
+            {
+                folderModel.Files.Add(file.ToModel());
+            }
+            return folderModel;
+        }
+
         public FolderModel ToModel()
         {
             return GetFolderRecurce(this);
+        }
+
+        public FolderModel ToUnDeletedModel()
+        {
+            return GetFolderUnDeletedRecurce(this);
         }
     }
 }

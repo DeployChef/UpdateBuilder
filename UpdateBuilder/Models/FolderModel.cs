@@ -15,6 +15,9 @@ namespace UpdateBuilder.Models
         [XmlIgnore]
         public string Path { get; set; }
 
+        [XmlIgnore]
+        public ModifyType ModifyType { get; set; }
+
         [XmlArray("Folders")]
         public List<FolderModel> Folders { get; set; } = new List<FolderModel>();
 
