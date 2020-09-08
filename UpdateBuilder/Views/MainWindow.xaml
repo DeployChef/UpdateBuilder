@@ -13,7 +13,7 @@
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Title="UpdateBuilder" Height="852" Width="834"
         Background="White" 
-        MinHeight="800" MinWidth="820"
+        MinHeight="600" MinWidth="820"
         WindowStartupLocation="CenterScreen" Style="{DynamicResource MainWindowStyle}" Icon="/UpdateBuilder;component/Фигура.ico">
     <Window.Resources>
         
@@ -320,9 +320,9 @@
                 </Grid>
                 <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="200*" MinHeight="200"/>
+                            <RowDefinition Height="200*" MinHeight="100"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="100*" MinHeight="43"/>
+                            <RowDefinition Height="100*" />
                         </Grid.RowDefinitions>
 
                     <Border BorderBrush="#FFECE9F1" BorderThickness="1" CornerRadius="10">
