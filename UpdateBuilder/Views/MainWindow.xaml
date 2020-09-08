@@ -20,9 +20,43 @@
         <HierarchicalDataTemplate DataType="{x:Type items:FolderItemViewModel}" ItemsSource="{Binding Childrens}">
             <StackPanel Orientation="Horizontal">
 
-                <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
+                <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14" ToolTipService.HasDropShadow="True">
+                    <CheckBox.ToolTip>
+                        <Grid Width="486">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0"  Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
+                            <Rectangle Grid.Column="0" Height="14" Width="18" Margin="0,7" VerticalAlignment="Top">
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="/UpdateBuilder;component/Resource/Critical.png"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <TextBlock Margin="5" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">Критическое обновление - важные файлы при запуске или при нажатии на «Быстрая проверка» в самом апдейтере, обновляться будут именно эти файлы</TextBlock>
+
+                        </Grid>
+                    </CheckBox.ToolTip>
+                </CheckBox>
+
+                <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0"  Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18">
+                    <CheckBox.ToolTip>
+                        <Grid Width="486">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Grid.Column="0" Height="18" Width="17" Margin="0,7" VerticalAlignment="Top">
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="/UpdateBuilder;component/Resource/CheckHash_On.png"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <TextBlock Margin="5" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">Проверять ли файл при обновлении на хеш-сумму и размер.  Если деактивировать - то апдейтеру достаточно его наличия. Актуально для файлов с настройками, чтобы при обновлении у игроков они не сбивались из-за частого обновления клиента игры.</TextBlock>
+
+                        </Grid>
+                    </CheckBox.ToolTip>
+                </CheckBox>
 
                 <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14">
                     <TextBlock.Style>
@@ -48,9 +82,43 @@
 
         <HierarchicalDataTemplate DataType="{x:Type items:FileItemViewModel}" ItemsSource="{Binding FileUpdates}">
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14"/>
+                <CheckBox IsChecked="{Binding QuickUpdate}" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CriticalCheckboxTempalte}" Width="18" Height="14">
+                    <CheckBox.ToolTip>
+                        <Grid Width="486">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18"/>
+                            <Rectangle Grid.Column="0" Height="14" Width="18" Margin="0,7" VerticalAlignment="Top">
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="/UpdateBuilder;component/Resource/Critical.png"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <TextBlock Margin="5" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">Критическое обновление - важные файлы при запуске или при нажатии на «Быстрая проверка» в самом апдейтере, обновляться будут именно эти файлы</TextBlock>
+
+                        </Grid>
+                    </CheckBox.ToolTip>
+                </CheckBox>
+
+                <CheckBox IsChecked="{Binding CheckHash}" Margin="7,0,0,0" Style="{DynamicResource CheckBoxStyle}" Template="{DynamicResource CheckHashCheckboxTempalte}" Width="17" Height="18">
+                    <CheckBox.ToolTip>
+                        <Grid Width="486">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Grid.Column="0" Height="18" Width="17" Margin="0,7" VerticalAlignment="Top">
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="/UpdateBuilder;component/Resource/CheckHash_On.png"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <TextBlock Margin="5" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">Проверять ли файл при обновлении на хеш-сумму и размер.  Если деактивировать - то апдейтеру достаточно его наличия. Актуально для файлов с настройками, чтобы при обновлении у игроков они не сбивались из-за частого обновления клиента игры.</TextBlock>
+
+                        </Grid>
+                    </CheckBox.ToolTip>
+                </CheckBox>
 
                 <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14">
                     <TextBlock.Style>
@@ -100,6 +168,7 @@
 
     </Window.Resources>
     <Grid>
+       
         <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Width="62.416" Margin="0,17.25,10,0">
             <Button
                                             x:Name="MinButton"
