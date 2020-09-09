@@ -129,12 +129,12 @@ namespace UpdateBuilder.Utils
 
             foreach (var file in rootFolder.Files.Where(c => c.ModifyType == ModifyType.Deleted))
             {
-                var filePath = Path.Combine(outPath, file.Name + ".zip");
+                var filePath = Path.Combine(outPath, file.Name + ".file");
 
                 Logger.Instance.Add($"Удаляем {filePath}");
 
-                if (File.Exists(filePath))
-                    File.Delete(filePath);
+                if (Directory.Exists(filePath))
+                    Directory.Delete(filePath, true);
             }
 
             foreach (var file in rootFolder.Files.Where(c => c.ModifyType == ModifyType.NotModified))
@@ -142,11 +142,12 @@ namespace UpdateBuilder.Utils
                 Logger.Instance.Add($"Ничего не делаем с {file.FullPath}");
             }
 
-            foreach (var file in rootFolder.Files.Where(c => c.ModifyType == ModifyType.Modified || c.ModifyType == ModifyType.New))
+            foreach (var file in rootFolder.Files.Where(c => c.ModifyType == ModifyType.New))
             { 
                 try
                 {
-                    var filePath = Path.Combine(outPath, file.Name);
+                    var fileFolder = Path.Combine(outPath, file.Name + ".file");
+                    var filePath = Path.Combine(fileFolder, file.Name + ".origin");
 
                     Logger.Instance.Add($"Проверяем {file.FullPath}");
 
@@ -155,12 +156,49 @@ namespace UpdateBuilder.Utils
 
                     Logger.Instance.Add($"{file.FullPath} на месте");
 
+                    if (!Directory.Exists(fileFolder))
+                        Directory.CreateDirectory(fileFolder);
+
                     Logger.Instance.Add($"Пакуем {file.Name}");
                    
                     using (var zip = new ZipFile{ CompressionLevel = CompressionLevel.BestCompression}) // Создаем объект для работы с архивом
                     {
                         zip.AddFile(file.FullPath,"");
                         zip.Save(filePath + ".zip");                           
+                    }
+
+                    Logger.Instance.Add($"Запаковано {file.Name}");
+                }
+                catch (Exception e)
+                {
+                    Logger.Instance.Add($"Не удалось запаковать {file.Name}, причина [{e.Message}]");
+                }
+                OnProgressChanged();
+            }
+
+            foreach (var file in rootFolder.Files.Where(c => c.ModifyType == ModifyType.Modified))
+            {
+                try
+                {
+                    var fileFolder = Path.Combine(outPath, file.Name + ".file");
+                    var filePath = Path.Combine(fileFolder, file.Name + ".origin");
+
+                    Logger.Instance.Add($"Проверяем {file.FullPath}");
+
+                    if (!File.Exists(file.FullPath))
+                        throw new Exception("Файл отсутствует");
+
+                    Logger.Instance.Add($"{file.FullPath} на месте");
+
+                    if (!Directory.Exists(fileFolder))
+                        Directory.CreateDirectory(fileFolder);
+
+                    Logger.Instance.Add($"Пакуем {file.Name}");
+
+                    using (var zip = new ZipFile { CompressionLevel = CompressionLevel.BestCompression }) // Создаем объект для работы с архивом
+                    {
+                        zip.AddFile(file.FullPath, "");
+                        zip.Save(filePath + ".zip");
                     }
 
                     Logger.Instance.Add($"Запаковано {file.Name}");
