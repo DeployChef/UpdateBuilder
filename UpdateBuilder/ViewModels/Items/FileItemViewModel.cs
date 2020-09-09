@@ -13,7 +13,7 @@ namespace UpdateBuilder.ViewModels.Items
         private bool _checkHash;
         private ModifyType _modifyType;
 
-        private ObservableCollection<FileUpdateItemViewModel> _fileUpdates;
+        private ObservableCollection<FilePatchItemViewModel> _fileUpdates;
 
         public string FullPath { get; set; }
 
@@ -49,7 +49,7 @@ namespace UpdateBuilder.ViewModels.Items
             set => SetProperty(ref _modifyType, value);
         }
 
-        public ObservableCollection<FileUpdateItemViewModel> FileUpdates
+        public ObservableCollection<FilePatchItemViewModel> FileUpdates
         {
             get => _fileUpdates;
             set => SetProperty(ref _fileUpdates, value);
@@ -67,7 +67,7 @@ namespace UpdateBuilder.ViewModels.Items
             FullPath = model.FullPath;
             Path = model.Path;
             ModifyType = model.ModifyType;
-            FileUpdates = new ObservableCollection<FileUpdateItemViewModel>(model.FileUpdates.Select(c => new FileUpdateItemViewModel(c)));
+            FileUpdates = new ObservableCollection<FilePatchItemViewModel>(model.FilePatches.Select(c => new FilePatchItemViewModel(c)));
         }
 
         public FileModel ToModel()

@@ -164,7 +164,51 @@
             </StackPanel>
         </HierarchicalDataTemplate>
 
-    
+        <DataTemplate DataType="{x:Type items:FilePatchItemViewModel}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.New}">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Deleted}">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ModifyType}" Value="{x:Static models:ModifyType.Modified}">
+                                    <Setter Property="Foreground" Value="Blue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock Text="{Binding Size}" Margin="5,0,0,0" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=ShowSizeCheckbox, Path=IsChecked}" Value="false">
+                                    <Setter Property="TextBox.Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock Text="{Binding Hash}" Margin="5,0,0,0" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=ShowHashCheckbox, Path=IsChecked}" Value="false">
+                                    <Setter Property="TextBox.Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
 
     </Window.Resources>
     <Grid>

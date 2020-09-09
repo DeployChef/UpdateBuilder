@@ -28,12 +28,12 @@ namespace UpdateBuilder.Models
 
         public bool CheckHash { get; set; }
 
-        [XmlArray("FileUpdates")]
-        public List<FileUpdateModel> FileUpdates { get; set; } = new List<FileUpdateModel>();
+        [XmlArray("FilePatches")]
+        public List<FilePatchModel> FilePatches { get; set; } = new List<FilePatchModel>();
     }
 
-    [XmlRoot("File")]
-    public class FileUpdateModel
+    [XmlRoot("FilePatch")]
+    public class FilePatchModel
     {
         public string Name { get; set; }
 

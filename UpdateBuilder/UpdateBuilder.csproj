@@ -83,7 +83,7 @@
     <Compile Include="RsyncNet\Libraries\RollingChecksum.cs" />
     <Compile Include="RsyncNet\Libraries\SlidingStreamBuffer.cs" />
     <Compile Include="Utils\StringHelper.cs" />
-    <Compile Include="ViewModels\Items\FileUpdateItemViewModel.cs" />
+    <Compile Include="ViewModels\Items\FilePatchItemViewModel.cs" />
     <Compile Include="ZIPLib\Crc32.cs" />
     <Compile Include="ZIPLib\Deflate.cs" />
     <Compile Include="ZIPLib\DeflateStream.cs" />
