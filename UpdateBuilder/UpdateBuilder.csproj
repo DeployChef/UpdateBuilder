@@ -65,6 +65,23 @@
     <Compile Include="HashCalc\CRC32.cs" />
     <Compile Include="Models\ModifyType.cs" />
     <Compile Include="Models\UpdateInfoModel.cs" />
+    <Compile Include="RsyncNet\Delta\ByteDelta.cs" />
+    <Compile Include="RsyncNet\Delta\CopyDelta.cs" />
+    <Compile Include="RsyncNet\Delta\DeltaGenerator.cs" />
+    <Compile Include="RsyncNet\Delta\DeltaStatistics.cs" />
+    <Compile Include="RsyncNet\Delta\DeltaStreamer.cs" />
+    <Compile Include="RsyncNet\Delta\IDelta.cs" />
+    <Compile Include="RsyncNet\Hash\FileHash.cs" />
+    <Compile Include="RsyncNet\Hash\HashBlock.cs" />
+    <Compile Include="RsyncNet\Hash\HashBlockGenerator.cs" />
+    <Compile Include="RsyncNet\Hash\HashBlockStreamer.cs" />
+    <Compile Include="RsyncNet\Helpers\MathEx.cs" />
+    <Compile Include="RsyncNet\Helpers\StreamUtils.cs" />
+    <Compile Include="RsyncNet\Libraries\HashAlgorithmWrapper.cs" />
+    <Compile Include="RsyncNet\Libraries\IHashAlgorithm.cs" />
+    <Compile Include="RsyncNet\Libraries\IRollingChecksum.cs" />
+    <Compile Include="RsyncNet\Libraries\RollingChecksum.cs" />
+    <Compile Include="RsyncNet\Libraries\SlidingStreamBuffer.cs" />
     <Compile Include="Utils\StringHelper.cs" />
     <Compile Include="ViewModels\Items\FileUpdateItemViewModel.cs" />
     <Compile Include="ZIPLib\Crc32.cs" />
@@ -223,5 +240,6 @@
   <ItemGroup>
     <Resource Include="Фигура.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
