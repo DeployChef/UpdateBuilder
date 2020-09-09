@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UpdateBuilder.Models;
 using UpdateBuilder.ViewModels.Base;
@@ -72,7 +73,7 @@ namespace UpdateBuilder.ViewModels.Items
 
         public FileModel ToModel()
         {
-            return new FileModel()
+            var model = new FileModel()
             {
                 Name = Name,
                 Size = Size,
@@ -83,6 +84,13 @@ namespace UpdateBuilder.ViewModels.Items
                 Path = Path,
                 ModifyType = ModifyType
             };
+
+            foreach (var filePatchItemViewModel in FileUpdates)
+            {
+                model.FilePatches.Add(filePatchItemViewModel.ToModel());
+            }
+
+            return model;
         }
     }
 }

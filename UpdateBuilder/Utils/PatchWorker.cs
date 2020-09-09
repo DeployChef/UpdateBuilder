@@ -10,6 +10,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using RsyncNet.Delta;
+using RsyncNet.Hash;
+using RsyncNet.Libraries;
 using UpdateBuilder.Models;
 using UpdateBuilder.ViewModels.Items;
 using UpdateBuilder.ZIPLib;
@@ -21,6 +24,7 @@ namespace UpdateBuilder.Utils
     {
         private readonly Crc32 _hashCalc = new Crc32();
         public event EventHandler ProgressChanged;
+        public const int BLOCK_SIZE = 1024;
 
         public async Task<FolderModel> GetFolderInfoAsync(string path, CancellationToken token)
         {
@@ -94,7 +98,7 @@ namespace UpdateBuilder.Utils
 
                     Logger.Instance.Add("Начинаем паковать");
 
-                    PuckingRecurse(updateInfoAll.Folder, $"{outPath}\\{updateInfoAll.Folder.Name}", token);
+                    ProceedUpdateRecurse(updateInfoAll.Folder, $"{outPath}\\{updateInfoAll.Folder.Name}", token);
 
                     Logger.Instance.Add("Все запаковано");
                     return true;
@@ -107,7 +111,7 @@ namespace UpdateBuilder.Utils
             });
         }
 
-        private void PuckingRecurse(FolderModel rootFolder, string outPath, CancellationToken token)
+        private void ProceedUpdateRecurse(FolderModel rootFolder, string outPath, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
            
@@ -124,7 +128,7 @@ namespace UpdateBuilder.Utils
                     Directory.CreateDirectory(folderPath);
                 }
 
-                PuckingRecurse(folder, folderPath, token);
+                ProceedUpdateRecurse(folder, folderPath, token);
             }
 
             foreach (var file in rootFolder.Files.Where(c => c.ModifyType == ModifyType.Deleted))
@@ -180,34 +184,96 @@ namespace UpdateBuilder.Utils
             {
                 try
                 {
+                  
                     var fileFolder = Path.Combine(outPath, file.Name + ".file");
-                    var filePath = Path.Combine(fileFolder, file.Name + ".origin");
+                    var tempFileFolder = Path.Combine(fileFolder, "Temp");
+                    var originFilePath = Path.Combine(fileFolder, file.Name + ".origin");
 
                     Logger.Instance.Add($"Проверяем {file.FullPath}");
 
                     if (!File.Exists(file.FullPath))
                         throw new Exception("Файл отсутствует");
 
+
                     Logger.Instance.Add($"{file.FullPath} на месте");
 
-                    if (!Directory.Exists(fileFolder))
-                        Directory.CreateDirectory(fileFolder);
 
-                    Logger.Instance.Add($"Пакуем {file.Name}");
+                    Logger.Instance.Add($"Создаем временную папку {tempFileFolder}");
+
+                    if (Directory.Exists(Path.Combine(tempFileFolder)))
+                        Directory.Delete(tempFileFolder, true);
+
+                    Directory.CreateDirectory(tempFileFolder);
+
+                    var lastPatch = file.FilePatches.Last();
+                    var patchFullPath = Path.Combine(fileFolder, lastPatch.Name);
+
+                    Logger.Instance.Add($"Создаем патч {lastPatch.Name} для {file.Name}");
+
+                    Logger.Instance.Add($"Собираем последнюю версию {file.Name} во временную папку");
+
+                    Unpacking(tempFileFolder, originFilePath, token);
+
+
+                    var patch = CreatePatchFor(file.FullPath, Path.Combine(tempFileFolder, file.Name));
 
                     using (var zip = new ZipFile { CompressionLevel = CompressionLevel.BestCompression }) // Создаем объект для работы с архивом
                     {
-                        zip.AddFile(file.FullPath, "");
-                        zip.Save(filePath + ".zip");
+                        zip.AddEntry(patchFullPath, "", patch);
+                        zip.Save(patchFullPath + ".zip");
                     }
 
-                    Logger.Instance.Add($"Запаковано {file.Name}");
+
+                    Logger.Instance.Add($"Патч запакован {file.Name}");
+
+                    Logger.Instance.Add($"Подчищаем временные файлы {tempFileFolder}");
+                    if (Directory.Exists(Path.Combine(tempFileFolder)))
+                        Directory.Delete(tempFileFolder, true);
                 }
                 catch (Exception e)
                 {
                     Logger.Instance.Add($"Не удалось запаковать {file.Name}, причина [{e.Message}]");
                 }
                 OnProgressChanged();
+            }
+        }
+
+        public byte[] CreatePatchFor(string filename1, string filename2)
+        {
+            // Compute hashes
+            HashBlock[] hashBlocksFromReceiver;
+            using (FileStream sourceStream = File.Open(filename1, FileMode.Open))
+            {
+                hashBlocksFromReceiver = new HashBlockGenerator(new RollingChecksum(),
+                    new HashAlgorithmWrapper<MD5>(MD5.Create()),
+                    BLOCK_SIZE).ProcessStream(sourceStream).ToArray();
+            }
+
+            // Compute deltas
+            MemoryStream deltaStream = new MemoryStream();
+            using (FileStream fileStream = File.Open(filename2, FileMode.Open))
+            {
+                DeltaGenerator deltaGen = new DeltaGenerator(new RollingChecksum(), new HashAlgorithmWrapper<MD5>(MD5.Create()));
+                deltaGen.Initialize(BLOCK_SIZE, hashBlocksFromReceiver);
+                IEnumerable<IDelta> deltas = deltaGen.GetDeltas(fileStream);
+                deltaGen.Statistics.Dump();
+                fileStream.Seek(0, SeekOrigin.Begin);
+                DeltaStreamer streamer = new DeltaStreamer();
+                streamer.Send(deltas, fileStream, deltaStream);
+            }
+
+            return deltaStream.ToArray();
+        }
+
+        private void Unpacking(string fileFolderPath, string filePath, CancellationToken token)
+        {
+            using (ZipFile zip = ZipFile.Read(filePath + ".zip"))
+            {
+                foreach (ZipEntry ef in zip)
+                {
+                    token.ThrowIfCancellationRequested();
+                    ef.Extract(fileFolderPath, ExtractExistingFileAction.OverwriteSilently);
+                }
             }
         }
 
@@ -390,18 +456,30 @@ namespace UpdateBuilder.Utils
                     Path = slaveFile.Path,
                     CheckHash = masterFile.CheckHash, 
                     QuickUpdate = masterFile.QuickUpdate, 
-                    Hash = slaveFile.Hash, 
-                    Size = slaveFile.Size,
+                    Hash = masterFile.Hash, 
+                    Size = masterFile.Size,
                     FullPath = slaveFile.FullPath,
+                    FilePatches = masterFile.FilePatches
                 };
 
-                if (slaveFile.Hash == masterFile.Hash)
+                if (slaveFile.Hash == masterFile.Hash || syncFile.FilePatches.Any(c => c.Hash == slaveFile.Hash))
                 {
                     syncFile.ModifyType = ModifyType.NotModified;
                 }
-                if (slaveFile.Hash != masterFile.Hash)
+                if (slaveFile.Hash != masterFile.Hash && syncFile.FilePatches.All(c => c.Hash != slaveFile.Hash))
                 {
                     syncFile.ModifyType = ModifyType.Modified;
+                    syncFile.Hash = masterFile.Hash;
+                    syncFile.Size = masterFile.Size;
+                    var newFilePatch = new FilePatchModel()
+                    {
+                        Hash = slaveFile.Hash,
+                        Size = slaveFile.Size,
+                        ModifyType = ModifyType.New,
+                        Version = syncFile.FilePatches.Count + 1
+                    };
+                    newFilePatch.Name = slaveFile.Name + ".patch_" + newFilePatch.Version;
+                    syncFile.FilePatches.Add(newFilePatch);
                 }
                 return syncFile;
             }

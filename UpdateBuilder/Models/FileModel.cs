@@ -38,7 +38,7 @@ namespace UpdateBuilder.Models
         public string Name { get; set; }
 
         [XmlIgnore]
-        public ModifyType ModifyType { get; set; }
+        public ModifyType ModifyType { get; set; } = ModifyType.NotModified;
 
         public long Size { get; set; }
 
