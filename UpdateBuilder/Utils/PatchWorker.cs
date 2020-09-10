@@ -22,7 +22,6 @@ namespace UpdateBuilder.Utils
 {
     public class PatchWorker
     {
-        private readonly Crc32 _hashCalc = new Crc32();
         public event EventHandler ProgressChanged;
         public const int BLOCK_SIZE = 1024;
 
@@ -74,7 +73,7 @@ namespace UpdateBuilder.Utils
             foreach (var file in rootDir.EnumerateFiles())
             {
                 token.ThrowIfCancellationRequested();
-                var hash = _hashCalc.Get(file.FullName);
+                var hash = GetMD5HashFromFile(file.FullName);
                 folder.Files.Add(new FileModel() { Name = file.Name, Hash = hash,
                     Size = file.Length, FullPath = file.FullName, Path = folder.Path});
                 Logger.Instance.Add($"Добавили {file} в {folder.Name}");
@@ -187,7 +186,7 @@ namespace UpdateBuilder.Utils
                   
                     var fileFolder = Path.Combine(outPath, file.Name + ".file");
                     var tempFileFolder = Path.Combine(fileFolder, "Temp");
-                    var originFilePath = Path.Combine(fileFolder, file.Name + ".origin");
+                  
 
                     Logger.Instance.Add($"Проверяем {file.FullPath}");
 
@@ -197,13 +196,7 @@ namespace UpdateBuilder.Utils
 
                     Logger.Instance.Add($"{file.FullPath} на месте");
 
-
-                    Logger.Instance.Add($"Создаем временную папку {tempFileFolder}");
-
-                    if (Directory.Exists(Path.Combine(tempFileFolder)))
-                        Directory.Delete(tempFileFolder, true);
-
-                    Directory.CreateDirectory(tempFileFolder);
+                    CreateTempFolder(tempFileFolder);
 
                     var lastPatch = file.FilePatches.Last();
                     var patchFullPath = Path.Combine(fileFolder, lastPatch.Name);
@@ -212,17 +205,15 @@ namespace UpdateBuilder.Utils
 
                     Logger.Instance.Add($"Собираем последнюю версию {file.Name} во временную папку");
 
-                    Unpacking(tempFileFolder, originFilePath, token);
+                    CreateTempFile(tempFileFolder, fileFolder, file, token);
 
-
-                    var patch = CreatePatchFor(file.FullPath, Path.Combine(tempFileFolder, file.Name));
+                    var patch = CreatePatchFor(Path.Combine(tempFileFolder, file.Name), file.FullPath);
 
                     using (var zip = new ZipFile { CompressionLevel = CompressionLevel.BestCompression }) // Создаем объект для работы с архивом
                     {
                         zip.AddEntry(patchFullPath, "", patch);
                         zip.Save(patchFullPath + ".zip");
                     }
-
 
                     Logger.Instance.Add($"Патч запакован {file.Name}");
 
@@ -236,6 +227,62 @@ namespace UpdateBuilder.Utils
                 }
                 OnProgressChanged();
             }
+        }
+
+        private static void CreateTempFolder(string tempFileFolder)
+        {
+            Logger.Instance.Add($"Создаем временную папку {tempFileFolder}");
+
+            if (Directory.Exists(Path.Combine(tempFileFolder)))
+                Directory.Delete(tempFileFolder, true);
+
+            Directory.CreateDirectory(tempFileFolder);
+        }
+
+        private void CreateTempFile(string tempFileFolder, string fileFolder, FileModel file, CancellationToken token)
+        {
+            var originFilePath = Path.Combine(fileFolder, file.Name + ".origin");
+            var tempFilePath = Path.Combine(tempFileFolder, file.Name);
+
+            Unpacking(tempFileFolder, originFilePath, token);
+
+            foreach (var filePatch in file.FilePatches.Where(c=>c.ModifyType != ModifyType.New))
+            {
+                var zipPatchPath = Path.Combine(fileFolder, filePatch.Name);
+                var tempPatchPath = Path.Combine(tempFileFolder, filePatch.Name);
+               
+                Unpacking(tempFileFolder, zipPatchPath, token);
+
+                var resultPath = Path.Combine(tempFileFolder, "PatchingResult");
+
+                using (FileStream deltaStream = File.Open(tempPatchPath, FileMode.Open))
+                using (FileStream sourceStream = File.Open(tempFilePath, FileMode.Open))
+                using (FileStream outStream = File.Open(resultPath, FileMode.Create))
+                {
+                            DeltaStreamer streamer = new DeltaStreamer();
+                            streamer.Receive(deltaStream, sourceStream, outStream);
+                }
+
+                var md5 = GetMD5HashFromFile(tempFilePath);
+                var md5Result = GetMD5HashFromFile(resultPath);
+                File.Copy(resultPath, tempFilePath, true);
+                File.Delete(resultPath);
+            }
+        }
+
+        public string GetMD5HashFromFile(string fileName)
+        {
+            FileStream file = new FileStream(fileName, FileMode.Open);
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] retVal = md5.ComputeHash(file);
+            file.Close();
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < retVal.Length; i++)
+            {
+                sb.Append(retVal[i].ToString("x2"));
+            }
+            return sb.ToString();
         }
 
         public byte[] CreatePatchFor(string filename1, string filename2)

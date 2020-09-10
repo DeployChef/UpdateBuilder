@@ -62,7 +62,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\ToggleButonEx.cs" />
-    <Compile Include="HashCalc\CRC32.cs" />
     <Compile Include="Models\ModifyType.cs" />
     <Compile Include="Models\UpdateInfoModel.cs" />
     <Compile Include="RsyncNet\Delta\ByteDelta.cs" />
