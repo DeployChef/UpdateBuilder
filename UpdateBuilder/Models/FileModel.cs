@@ -24,9 +24,9 @@ namespace UpdateBuilder.Models
 
         public string Hash { get; set; }
 
-        public bool QuickUpdate { get; set; }
+        public bool QuickUpdate { get; set; } = true;
 
-        public bool CheckHash { get; set; }
+        public bool CheckHash { get; set; } = true;
 
         [XmlArray("FileUpdates")]
         public List<FileUpdateModel> FileUpdates { get; set; } = new List<FileUpdateModel>();
