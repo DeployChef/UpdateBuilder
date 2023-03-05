@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<a RestCode="231155900" DateTime="2023-01-31T13:55:30" Situation="11" seqnumber="126" guid="{833F0492-E8ED-4F34-81BC-8A9F4D73A995}" name="New Order" ShiftNum="797" ShiftDate="2023-01-31T00:00:00">
+	<Station id="30217" code="17" name="5900_CASH_2FR" NetName="5900_CASH_2FR"/>
+	<Server id="30216" code="30216" name="SRV_5900_2FR" NetName="SRV_5900_2FR"/>
+	<Waiter id="1060010" code="13287" name="Автомат_1033_1">
+		<Role id="1129527" code="10341" name="Android"/>
+	</Waiter>
+	<Order visit="552541983" orderIdent="256" guid="{92CA31A3-BF97-45EA-B486-8E815191433B}" url="http://code.ucs.ru/qr?id=2BEF4B3502DB4FAEB6FF521E3492AEDF92CA31A3BF9745EAB4868E815191433BE447198B" orderName="7967/1" locked="1" version="0" crc32="0" orderSum="0" unpaidSum="0" discountSum="0" totalPieces="0" seqNumber="526" paid="1" finished="0" persistentComment="" nonPersistentComment="" openTime="2023-01-31T13:55:29">
+		<Creator id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Creator>
+		<Waiter id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Waiter>
+		<OrderCategory id="1120904" code="12" name="Ресторан 2019 НДС 20%"/>
+		<OrderType id="1123172" code="17" name="В ПАКЕТЕ"/>
+		<Station id="30217" code="17" name="5900_CASH_2FR"/>
+		<ExternalProps>
+			<Prop name="{71F830D3-2DE3-4F74-B8F6-0BF199291C86}" value="{BACC15A2-3973-4CD9-A267-B14E1454DF78}"/>
+			<Prop name="{7DC7AF79-1D00-4573-BE8A-A02C6FA3B430}" value="R02"/>
+		</ExternalProps>
+		<Session uni="2" line_guid="{0D849270-53F8-4165-88F8-5160C4FC6E49}" state="1" sessionID="2" isDraft="0" remindTime="2023-01-31T13:55:00" startService="2023-01-31T13:55:29" printed="0" cookMins="0">
+			<Station id="30217" code="17" name="5900_CASH_2FR"/>
+			<Author id="1060010" code="13287" name="Автомат_1033_1">
+				<Role id="1129527" code="10341" name="Android"/>
+			</Author>
+			<Creator id="1060010" code="13287" name="Автомат_1033_1">
+				<Role id="1129527" code="10341" name="Android"/>
+			</Creator>
+			<PriceScale id="1189916" code="12" name="27.07.2020 10%"/>
+			<TradeGroup id="1001795" code="3" name="Корпоративные рестораны"/>
+		</Session>
+	</Order>
+	<Session uni="2" line_guid="{0D849270-53F8-4165-88F8-5160C4FC6E49}" state="1" sessionID="2" isDraft="0" remindTime="2023-01-31T13:55:00" startService="2023-01-31T13:55:29" printed="0" cookMins="0">
+		<Station id="30217" code="17" name="5900_CASH_2FR"/>
+		<Author id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Author>
+		<Creator id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Creator>
+		<PriceScale id="1189916" code="12" name="27.07.2020 10%"/>
+		<TradeGroup id="1001795" code="3" name="Корпоративные рестораны"/>
+	</Session>
+	<Item ClassName="TOrder"/>
+</a>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<a RestCode="231155900" DateTime="2023-02-20T19:59:13" Situation="3" seqnumber="14" guid="{8A4AB428-B1AB-4301-A400-A3B889A1F7CA}" name="Order Changed" ShiftNum="784" ShiftDate="2023-02-20T00:00:00">
+	<Station id="30217" code="17" name="5900_CASH_2FR" NetName="5900_CASH_2FR"/>
+	<Server id="30216" code="30216" name="SRV_5900_2FR" NetName="SRV_5900_2FR"/>
+	<Order visit="553846679" orderIdent="256" guid="{1680CF1E-CA07-4BFC-8DED-CD9BA959521C}" url="http://code.ucs.ru/qr?id=2BEF4B3502DB4FAEB6FF521E3492AEDF1680CF1ECA074BFC8DEDCD9BA959521C5EB5680C" orderName="!100793" version="5" crc32="-743372055" orderSum="237400" unpaidSum="0" discountSum="0" totalPieces="10000" seqNumber="739" paid="1" finished="1" persistentComment="" nonPersistentComment="" openTime="2023-02-20T19:56:02" kdsstate="collected">
+		<Creator id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Creator>
+		<Waiter id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Waiter>
+		<OrderCategory id="1120904" code="12" name="Ресторан 2019 НДС 20%"/>
+		<OrderType id="1123172" code="17" name="В ПАКЕТЕ"/>
+		<Station id="30217" code="17" name="5900_CASH_2FR"/>
+		<ExternalProps>
+			<Prop name="{71F830D3-2DE3-4F74-B8F6-0BF199291C86}" value="{BACC15A2-3973-4CD9-A267-B14E1454DF78}"/>
+			<Prop name="{7DC7AF79-1D00-4573-BE8A-A02C6FA3B430}" value="R15"/>
+		</ExternalProps>
+	</Order>
+	<Session uni="2" line_guid="{DA07F50E-5535-4DA4-982B-C6C5433EC17A}" state="6" sessionID="2" isDraft="0" remindTime="2023-02-20T19:57:13" startService="2023-02-20T19:56:47" printed="1" cookMins="0">
+		<Station id="30217" code="17" name="5900_CASH_2FR"/>
+		<Author id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Author>
+		<Creator id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Creator>
+		<Dish id="1185973" code="1582" name="Двойной Темный Бургер ржаной" uni="4" line_guid="{C09BBCFB-2482-485E-819C-737BB7960904}" state="6" guid="{B4E7E4C6-519D-4122-8EC2-198E600581BF}" price="28400" amount="142000" kdsstate="ready" paidAmount="142000" quantity="5000" srcQuantity="5000"/>
+		<Dish id="1200069" code="5798" name="Сандерс Бургер Оригинальный" uni="8" line_guid="{CF23D2C9-92AF-4BB4-B0EA-095E63D45E38}" state="6" guid="{5C102840-CB13-4A9D-B69D-68323395BB50}" price="19900" amount="79600" kdsstate="ready" paidAmount="79600" quantity="4000" srcQuantity="4000"/>
+		<Dish id="1100876" code="2382" name="Чизбургер Де Люкс СБ" uni="11" line_guid="{6FA64273-72B6-4C9F-AD41-B78C5E594C5C}" state="6" guid="{C266C64D-ECFF-4FA3-A65E-43C07D27B52B}" price="13900" amount="15800" kdsstate="taken" paidAmount="15800" quantity="1000" srcQuantity="1000">
+			<Modi id="1070070" code="2148" name="Ломтик бекона" uni="14" line_guid="{91DAC591-3A37-4389-BCEF-2F452547F77B}" state="6" guid="{0A84A41F-1B73-493F-9104-808AFB01A60F}" count="1" price="1900"/>
+		</Dish>
+		<Pay id="1" code="1" name="Рубли" uni="15" line_guid="{94AE780E-3E79-4CE0-A1A2-322535B1914D}" state="6" guid="{16D72549-14D8-4F31-9E2A-0A833D4F5EED}" amount="237500" basicSum="237500"/>
+		<Pay id="1" code="1" name="Рубли" uni="16" line_guid="{C6284439-315F-4072-8B76-3FB1E3C8102D}" state="6" guid="{16D72549-14D8-4F31-9E2A-0A833D4F5EED}" amount="-100" basicSum="-100"/>
+		<PriceScale id="1189916" code="12" name="27.07.2020 10%"/>
+		<TradeGroup id="1001795" code="3" name="Корпоративные рестораны"/>
+	</Session>
+	<Session uni="1" line_guid="{434874A1-3A4A-4065-B6C8-48CA0CA6ED19}" state="6" sessionID="1" isDraft="0" remindTime="2023-02-20T19:57:12" startService="2023-02-20T19:56:03" printed="0" cookMins="0">
+		<Station id="30217" code="17" name="5900_CASH_2FR"/>
+		<Author id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Author>
+		<Creator id="1060010" code="13287" name="Автомат_1033_1">
+			<Role id="1129527" code="10341" name="Android"/>
+		</Creator>
+		<PrintCheck uni="3" line_guid="{055391A3-58CB-42DE-8B91-C6E1ABC55D52}" state="6" amount="237400" CheckNum="100793" deleted="0" printTime="2023-02-20T19:57:12" startTime="2023-02-20T19:57:07">
+			<Author id="1060010" code="13287" name="Автомат_1033_1">
+				<Role id="1129527" code="10341" name="Android"/>
+			</Author>
+			<Pay id="1" code="1" name="Рубли" uni="15" line_guid="{94AE780E-3E79-4CE0-A1A2-322535B1914D}" state="6" guid="{16D72549-14D8-4F31-9E2A-0A833D4F5EED}" amount="237500" basicSum="237500"/>
+			<Pay id="1" code="1" name="Рубли" uni="16" line_guid="{C6284439-315F-4072-8B76-3FB1E3C8102D}" state="6" guid="{16D72549-14D8-4F31-9E2A-0A833D4F5EED}" amount="-100" basicSum="-100"/>
+		</PrintCheck>
+		<PriceScale id="1189916" code="12" name="27.07.2020 10%"/>
+		<TradeGroup id="1001795" code="3" name="Корпоративные рестораны"/>
+	</Session>
+	<Item/>
+	<ChangeLog>
+		<Dish id="1100876" code="2382" name="Чизбургер Де Люкс СБ" uni="11" line_guid="{6FA64273-72B6-4C9F-AD41-B78C5E594C5C}" state="6" guid="{C266C64D-ECFF-4FA3-A65E-43C07D27B52B}" price="13900" amount="15800" kdsstate="collected" paidAmount="15800" quantity="1000" srcQuantity="1000" number="1" oldvalue="1" newvalue="6" OldStrValue="sent" NewStrValue="collected" changed="1">
+			<Manager id="9001" code="9001" name="Система">
+				<Role id="100010" code="100010" name="Системная"/>
+			</Manager>
+			<Oper id="263" name="Изменение КДС-статуса у блюда" guid="{7C5BD723-F0E7-4AD3-9CFD-F3E752B366EE}"/>
+		</Dish>
+	</ChangeLog>
+</a>
