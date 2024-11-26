@@ -28,17 +28,17 @@ namespace UpdateBuilder.Models
 
         public bool CheckHash { get; set; } = true;
 
-        [XmlArray("FileUpdates")]
-        public List<FileUpdateModel> FileUpdates { get; set; } = new List<FileUpdateModel>();
+        [XmlArray("FilePatches")]
+        public List<FilePatchModel> FilePatches { get; set; } = new List<FilePatchModel>();
     }
 
-    [XmlRoot("File")]
-    public class FileUpdateModel
+    [XmlRoot("FilePatch")]
+    public class FilePatchModel
     {
         public string Name { get; set; }
 
         [XmlIgnore]
-        public ModifyType ModifyType { get; set; }
+        public ModifyType ModifyType { get; set; } = ModifyType.NotModified;
 
         public long Size { get; set; }
 

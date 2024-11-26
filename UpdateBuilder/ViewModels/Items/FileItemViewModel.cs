@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UpdateBuilder.Models;
 using UpdateBuilder.ViewModels.Base;
@@ -13,7 +14,7 @@ namespace UpdateBuilder.ViewModels.Items
         private bool _checkHash;
         private ModifyType _modifyType;
 
-        private ObservableCollection<FileUpdateItemViewModel> _fileUpdates;
+        private ObservableCollection<FilePatchItemViewModel> _fileUpdates;
 
         public string FullPath { get; set; }
 
@@ -49,7 +50,7 @@ namespace UpdateBuilder.ViewModels.Items
             set => SetProperty(ref _modifyType, value);
         }
 
-        public ObservableCollection<FileUpdateItemViewModel> FileUpdates
+        public ObservableCollection<FilePatchItemViewModel> FileUpdates
         {
             get => _fileUpdates;
             set => SetProperty(ref _fileUpdates, value);
@@ -67,12 +68,12 @@ namespace UpdateBuilder.ViewModels.Items
             FullPath = model.FullPath;
             Path = model.Path;
             ModifyType = model.ModifyType;
-            FileUpdates = new ObservableCollection<FileUpdateItemViewModel>(model.FileUpdates.Select(c => new FileUpdateItemViewModel(c)));
+            FileUpdates = new ObservableCollection<FilePatchItemViewModel>(model.FilePatches.Select(c => new FilePatchItemViewModel(c)));
         }
 
         public FileModel ToModel()
         {
-            return new FileModel()
+            var model = new FileModel()
             {
                 Name = Name,
                 Size = Size,
@@ -83,6 +84,13 @@ namespace UpdateBuilder.ViewModels.Items
                 Path = Path,
                 ModifyType = ModifyType
             };
+
+            foreach (var filePatchItemViewModel in FileUpdates)
+            {
+                model.FilePatches.Add(filePatchItemViewModel.ToModel());
+            }
+
+            return model;
         }
     }
 }

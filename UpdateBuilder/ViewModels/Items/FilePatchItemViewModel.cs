@@ -5,7 +5,7 @@ using UpdateBuilder.ViewModels.Base;
 
 namespace UpdateBuilder.ViewModels.Items
 {
-    public class FileUpdateItemViewModel : ItemViewModel
+    public class FilePatchItemViewModel : ItemViewModel
     { 
         private long _size;
         private string _hash;
@@ -32,7 +32,7 @@ namespace UpdateBuilder.ViewModels.Items
 
         public int Version { get; set; }
 
-        public FileUpdateItemViewModel(FileUpdateModel model)
+        public FilePatchItemViewModel(FilePatchModel model)
         {
             Name = model.Name;
             Size = model.Size;
@@ -41,9 +41,9 @@ namespace UpdateBuilder.ViewModels.Items
             Version = model.Version;
         }
 
-        public FileUpdateModel ToModel()
+        public FilePatchModel ToModel()
         {
-            return new FileUpdateModel
+            return new FilePatchModel
             {
                 Name = Name,
                 Size = Size,
