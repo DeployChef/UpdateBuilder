@@ -12,8 +12,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using UpdateBuilder.Models;
 using UpdateBuilder.ViewModels.Items;
-using UpdateBuilder.ZIPLib;
-using UpdateBuilder.ZIPLib.Zip;
+using UpdateBuilder.ZipNew;
+using UpdateBuilder.ZipNew.Zip;
 
 namespace UpdateBuilder.Utils
 {
